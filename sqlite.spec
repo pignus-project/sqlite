@@ -1,7 +1,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.1.2
-Release: 1
+Release: 2
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -9,7 +9,7 @@ Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
 Patch0: sqlite-3.1.2-doc.patch
 Obsoletes: sqlite3 sqlite3-devel
 # XXX for "make check" only
-BuildRequires: ncurses readline tcl-devel
+BuildRequires: ncurses readline
 BuildRoot: %{_tmppath}/%{name}-root
 
 %description
@@ -57,7 +57,7 @@ This package contains the tcl modules for %{name}.
 CFLAGS="%{optflags} -DNDEBUG=1 -fno-strict-aliasing" \
 CXXFLAGS="%{optflags} -DNDEBUG=1 -fno-strict-aliasing" \
 TARGET_EXEEXT='.so' \
-%configure --enable-utf8
+%configure --enable-utf8 --disable-tcl
 
 perl -pi -e 's/\@VERSION_NUMBER\@/3001002/' Makefile
 
@@ -101,11 +101,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
 
+%if 0
 %files tcl
 %defattr(-, root, root)
 %{_datadir}/tcl*/sqlite3
+%endif
 
 %changelog
+* Mon Apr  4 2005 Jeremy Katz <katzj@redhat.com> - 3.1.2-2
+- disable tcl subpackage
+
 * Wed Mar  9 2005 Jeff Johnson <jbj@redhat.com> 3.1.2-1
 - rename to "sqlite" from "sqlite3" (#149719, #150012).
 
