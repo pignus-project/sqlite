@@ -1,15 +1,14 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.1.2
-Release: 2
+Release: 3
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
 Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
 Patch0: sqlite-3.1.2-doc.patch
 Obsoletes: sqlite3 sqlite3-devel
-# XXX for "make check" only
-BuildRequires: ncurses readline
+BuildRequires: ncurses-devel readline-devel
 BuildRoot: %{_tmppath}/%{name}-root
 
 %description
@@ -108,6 +107,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Apr  9 2005 Warren Togami <wtogami@redhat.com> - 3.1.2-3
+- fix buildreqs (#154298)
+
 * Mon Apr  4 2005 Jeremy Katz <katzj@redhat.com> - 3.1.2-2
 - disable tcl subpackage
 
