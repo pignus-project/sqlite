@@ -1,14 +1,20 @@
+# --with-tcl enables sqlite-tcl subpackage, and also makes %%check possible.
+%bcond_with tcl
+
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.1.2
-Release: 3
+Version: 3.2.2
+Release: 1
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
 Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
-Patch0: sqlite-3.1.2-doc.patch
 Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel
+BuildRequires: /usr/bin/tclsh
+%if %{with tcl}
+BuildRequires: tcl-devel
+%endif
 BuildRoot: %{_tmppath}/%{name}-root
 
 %description
@@ -17,7 +23,7 @@ subset of SQL92 is supported. A complete database is stored in a
 single disk file. The API is designed for convenience and ease of use.
 Applications that link against SQLite can enjoy the power and
 flexiblity of an SQL database without the administrative hassles of
-supporting a separate database server.  Version 2 and version 3 binaries 
+supporting a separate database server.  Version 2 and version 3 binaries
 are named to permit each to be installed on a single host
 
 %package devel
@@ -30,6 +36,7 @@ This package contains the header files, static libraries and development
 documentation for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
 
+%if %{with tcl}
 %package tcl
 Summary: Tcl module for the sqlite3 embeddable SQL database engine.
 Group: Development/Languages
@@ -37,45 +44,27 @@ Requires: %{name} = %{version}-%{release}
 
 %description tcl
 This package contains the tcl modules for %{name}.
+%endif
 
 %prep
-%setup -q -n sqlite
-
-%patch0 -p1 -b .jbj
-
-%{__perl} -pi.orig -e '
-               s|\$\(exec_prefix\)/lib|\$(libdir)|g;
-               s|/usr/lib|\$(libdir)|g;
-       ' Makefile* */Makefile* */*/Makefile*
-
-%ifarch x86_64
-%{__libtoolize} --force
-%{__aclocal}
-%{__autoconf}
-%endif
-CFLAGS="%{optflags} -DNDEBUG=1 -fno-strict-aliasing" \
-CXXFLAGS="%{optflags} -DNDEBUG=1 -fno-strict-aliasing" \
-TARGET_EXEEXT='.so' \
-%configure --enable-utf8 --disable-tcl
-
-perl -pi -e 's/\@VERSION_NUMBER\@/3001002/' Makefile
+%setup -q
 
 %build
+%configure %{!?with_tcl:--disable-tcl}
 make %{?_smp_mflags}
-%{__make} doc
+make doc
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} DESTDIR=${RPM_BUILD_ROOT} install
+make DESTDIR=${RPM_BUILD_ROOT} install
 
-mv sqlite.1 sqlite3.1 || :
 %{__install} -D -m0644 sqlite3.1 %{buildroot}%{_mandir}/man1/sqlite3.1
 
+%if %{with tcl}
 %check
-# XXX sqlite-3.0.8 on x86: 56 errors out of 14885 tests
-# XXX sqlite-3.1.2 on x86: 1 errors out of 19710 tests
-make test || :
+make test
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -100,13 +89,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
 
-%if 0
+%if %{with tcl}
 %files tcl
 %defattr(-, root, root)
 %{_datadir}/tcl*/sqlite3
 %endif
 
 %changelog
+* Fri Jul  8 2005 Roland McGrath <roland@redhat.com> - 3.2.2-1
+- Upgrade to 3.2.2 release.
+
 * Sat Apr  9 2005 Warren Togami <wtogami@redhat.com> - 3.1.2-3
 - fix buildreqs (#154298)
 
@@ -124,5 +116,5 @@ rm -rf $RPM_BUILD_ROOT
 - repackage for fc4.
 
 * Mon Jan 17 2005 R P Herrold <info@owlriver.com> 3.0.8-2orc
-- fix a man page nameing conflict when co-installed with sqlite-2, as 
+- fix a man page nameing conflict when co-installed with sqlite-2, as
   is permissible
