@@ -3,7 +3,7 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.2.5
+Version: 3.2.6
 Release: 1
 License: Public Domain
 Group: 	Applications/Databases
@@ -96,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Sep 22 2005 Florian La Roche <laroche@redhat.com>
+- Upgrade to 3.2.6 release.
+
 * Sun Sep 11 2005 Florian La Roche <laroche@redhat.com>
 - Upgrade to 3.2.5 release.
 
