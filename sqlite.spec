@@ -4,7 +4,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.2.7
-Release: 1
+Release: 2
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -61,6 +61,8 @@ make DESTDIR=${RPM_BUILD_ROOT} install
 
 %{__install} -D -m0644 sqlite3.1 %{buildroot}%{_mandir}/man1/sqlite3.1
 
+rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
+
 %if %{tcl}
 %check
 make test
@@ -84,8 +86,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root)
 %doc doc/
 %{_includedir}/*.h
-%{_libdir}/*.a
-%{_libdir}/*.la
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
 
@@ -96,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Oct  4 2005 Jeremy Katz <katzj@redhat.com> - 3.2.7-2
+- no more static file or libtool archive (#169874) 
+
 * Wed Sep 28 2005 Florian La Roche <laroche@redhat.com>
 - Upgrade to 3.2.7 release.
 
