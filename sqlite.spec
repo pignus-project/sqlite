@@ -3,8 +3,8 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.2.7
-Release: 2.1
+Version: 3.2.8
+Release: 1
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -96,6 +96,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Jan 24 2006 Paul Nasrat <pnasrat@redhat.com> - 3.2.8-1
+- Add --enable-threadsafe (Nicholas Miell)
+- Update to 3.2.8
+
 * Fri Dec 09 2005 Jesse Keating <jkeating@redhat.com>
 - rebuilt
 
