@@ -1,9 +1,11 @@
 # --with-tcl enables sqlite-tcl subpackage, and also makes %%check possible.
 %define tcl 0%{?_with_tcl:1}
+# --with static enables static library in -devel subpackage
+%define static 0%{?_with_static:1}
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.3.5
+Version: 3.3.6
 Release: 1
 License: Public Domain
 Group: 	Applications/Databases
@@ -22,7 +24,7 @@ SQLite is a C library that implements an SQL database engine. A large
 subset of SQL92 is supported. A complete database is stored in a
 single disk file. The API is designed for convenience and ease of use.
 Applications that link against SQLite can enjoy the power and
-flexiblity of an SQL database without the administrative hassles of
+flexibility of an SQL database without the administrative hassles of
 supporting a separate database server.  Version 2 and version 3 binaries
 are named to permit each to be installed on a single host
 
@@ -50,7 +52,9 @@ This package contains the tcl modules for %{name}.
 %setup -q
 
 %build
-%configure %{!?with_tcl:--disable-tcl}
+%configure %{!?with_tcl:--disable-tcl} \
+           --enable-threadsafe \
+           --enable-threads-override-locks
 make %{?_smp_mflags}
 make doc
 
@@ -61,7 +65,9 @@ make DESTDIR=${RPM_BUILD_ROOT} install
 
 %{__install} -D -m0644 sqlite3.1 %{buildroot}%{_mandir}/man1/sqlite3.1
 
+%if ! %{static}
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
+%endif
 
 %if %{tcl}
 %check
@@ -88,7 +94,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*.h
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
-
+%if %{static}
+%{_libdir}/*.a
+%exclude %{_libdir}/*.la
+%endif
 %if %{tcl}
 %files tcl
 %defattr(-, root, root)
@@ -96,6 +105,12 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Jun 26 2006 Paul Nasrat <pnasrat@redhat.com> - 3.3.6-1
+- Update to 3.3.6
+- Fix typo  (#189647)
+- Enable threading fixes (#181298)
+- Conditionalize static library
+
 * Mon Apr 17 2006 Paul Nasrat <pnasrat@redhat.com> - 3.3.5-1
 - Update to 3.3.5
 
