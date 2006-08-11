@@ -6,7 +6,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.3.6
-Release: 1.1
+Release: 2
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -52,7 +52,7 @@ This package contains the tcl modules for %{name}.
 %setup -q
 
 %build
-%configure %{!?with_tcl:--disable-tcl} \
+%configure %{!?_with_tcl:--disable-tcl} \
            --enable-threadsafe \
            --enable-threads-override-locks
 make %{?_smp_mflags}
@@ -105,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Aug 11 2006 Paul Nasrat <pnasrat@redhat.com> - 3.3.6-2
+- Fix conditional typo (patch from Gareth Armstrong)
+
 * Wed Jul 12 2006 Jesse Keating <jkeating@redhat.com> - 3.3.6-1.1
 - rebuild
 
