@@ -54,6 +54,7 @@ This package contains the tcl modules for %{name}.
 %patch0 -p1 -b .fts
 
 %build
+export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_DISABLE_DIRSYNC=1"
 %configure %{!?_with_tcl:--disable-tcl} \
            --enable-threadsafe \
            --enable-threads-override-locks
@@ -110,6 +111,7 @@ rm -rf $RPM_BUILD_ROOT
 * Fri Jun 01 2007 Paul Nasrat <pnasrat@redhat.com> - 3.3.17-2
 - Enable load 
 - Build fts1 and fts2
+- Don't sync on dirs (#237427)
 
 * Tue May 29 2007 Paul Nasrat <pnasrat@redhat.com> - 3.3.17-1
 - Update to 3.3.17
