@@ -13,7 +13,7 @@ URL: http://www.sqlite.org/
 Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
 Patch0: sqlite-3.3.17-fts.patch
 Obsoletes: sqlite3 sqlite3-devel
-BuildRequires: ncurses-devel readline-devel
+BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: /usr/bin/tclsh
 %if %{tcl}
 BuildRequires: tcl-devel
@@ -54,7 +54,7 @@ This package contains the tcl modules for %{name}.
 %patch0 -p1 -b .fts
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_DISABLE_DIRSYNC=1"
+export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_DISABLE_DIRSYNC=1 -Wall"
 %configure LIBS=-ldl %{!?_with_tcl:--disable-tcl} \
            --enable-threadsafe \
            --enable-threads-override-locks 
