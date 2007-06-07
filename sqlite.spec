@@ -55,7 +55,7 @@ This package contains the tcl modules for %{name}.
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_DISABLE_DIRSYNC=1 -Wall"
-%configure LIBS=-ldl %{!?_with_tcl:--disable-tcl} \
+%configure TLIBS=-ldl %{!?_with_tcl:--disable-tcl} \
            --enable-threadsafe \
            --enable-threads-override-locks 
 make %{?_smp_mflags}
