@@ -5,8 +5,8 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.3.17
-Release: 2%{?dist}
+Version: 3.4.0
+Release: 1%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -55,10 +55,10 @@ This package contains the tcl modules for %{name}.
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_DISABLE_DIRSYNC=1 -Wall"
-%configure TLIBS=-ldl %{!?_with_tcl:--disable-tcl} \
+%configure %{!?_with_tcl:--disable-tcl} \
            --enable-threadsafe \
            --enable-threads-override-locks 
-make %{?_smp_mflags}
+make TLIBS=-ldl %{?_smp_mflags}
 make doc
 
 %install
@@ -108,6 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Jun 19 2007 Paul Nasrat <pnasrat@redhat.com> - 3.4.0-1
+- Update to 3.4.0
+
 * Fri Jun 01 2007 Paul Nasrat <pnasrat@redhat.com> - 3.3.17-2
 - Enable load 
 - Build fts1 and fts2
