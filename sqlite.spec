@@ -5,13 +5,12 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.4.0
-Release: 2%{?dist}
+Version: 3.4.1
+Release: 1%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
 Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
-Patch0: sqlite-3.3.17-fts.patch
 Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: /usr/bin/tclsh
@@ -51,7 +50,6 @@ This package contains the tcl modules for %{name}.
 
 %prep
 %setup -q
-#patch0 -p1 -b .fts
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_DISABLE_DIRSYNC=1 -Wall"
@@ -108,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Jul 21 2007 Paul Nasrat <pnasrat@redhat.com> - 3.4.1-1
+- Update to 3.4.1
+
 * Sun Jun 24 2007 Paul Nasrat <pnsarat@redhat.com> - 3.4.0-2
 - Disable load for now (#245486)
 
