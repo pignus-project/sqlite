@@ -1,11 +1,12 @@
 # bcond default logic is nicely backwards...
 %bcond_without tcl
 %bcond_with static
+%bcond_with check
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.4.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -69,7 +70,7 @@ make DESTDIR=${RPM_BUILD_ROOT} install
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 %endif
 
-%if %{with tcl}
+%if %{with check}
 %check
 make test
 %endif
@@ -105,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Sep 28 2007 Panu Matilainen <pmatilai@redhat.com> - 3.4.2-3
+- Add another build conditional for enabling %%check
+
 * Fri Sep 28 2007 Panu Matilainen <pmatilai@redhat.com> - 3.4.2-2
 - Use bconds for the spec build conditionals
 - Enable -tcl subpackage again (#309041)
