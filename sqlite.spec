@@ -1,12 +1,11 @@
-# --with-tcl enables sqlite-tcl subpackage, and also makes %%check possible.
-%define tcl 0%{?_with_tcl:1}
-# --with static enables static library in -devel subpackage
-%define static 0%{?_with_static:1}
+# bcond default logic is nicely backwards...
+%bcond_without tcl
+%bcond_with static
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.4.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -14,7 +13,7 @@ Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
 Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: /usr/bin/tclsh
-%if %{tcl}
+%if %{with tcl}
 BuildRequires: tcl-devel
 %endif
 BuildRoot: %{_tmppath}/%{name}-root
@@ -38,7 +37,7 @@ This package contains the header files, static libraries and development
 documentation for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
 
-%if %{tcl}
+%if %{with tcl}
 %package tcl
 Summary: Tcl module for the sqlite3 embeddable SQL database engine.
 Group: Development/Languages
@@ -53,7 +52,7 @@ This package contains the tcl modules for %{name}.
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_DISABLE_DIRSYNC=1 -Wall"
-%configure %{!?_with_tcl:--disable-tcl} \
+%configure %{!?with_tcl:--disable-tcl} \
            --enable-threadsafe \
            --enable-threads-override-locks 
 make %{?_smp_mflags}
@@ -66,11 +65,11 @@ make DESTDIR=${RPM_BUILD_ROOT} install
 
 %{__install} -D -m0644 sqlite3.1 %{buildroot}%{_mandir}/man1/sqlite3.1
 
-%if ! %{static}
+%if ! %{with static}
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 %endif
 
-%if %{tcl}
+%if %{with tcl}
 %check
 make test
 %endif
@@ -95,17 +94,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*.h
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
-%if %{static}
+%if %{with static}
 %{_libdir}/*.a
 %exclude %{_libdir}/*.la
 %endif
-%if %{tcl}
+%if %{with tcl}
 %files tcl
 %defattr(-, root, root)
 %{_datadir}/tcl*/sqlite3
 %endif
 
 %changelog
+* Fri Sep 28 2007 Panu Matilainen <pmatilai@redhat.com> - 3.5.2-2
+- Use bconds for the spec build conditionals
+- Enable -tcl subpackage again (#309041)
+
 * Wed Aug 15 2007 Paul Nasrat <pnasrat@redhat.com> - 3.4.2-1
 - Update to 3.4.2
 
