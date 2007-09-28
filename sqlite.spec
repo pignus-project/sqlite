@@ -105,7 +105,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Fri Sep 28 2007 Panu Matilainen <pmatilai@redhat.com> - 3.5.2-2
+* Fri Sep 28 2007 Panu Matilainen <pmatilai@redhat.com> - 3.4.2-2
 - Use bconds for the spec build conditionals
 - Enable -tcl subpackage again (#309041)
 
