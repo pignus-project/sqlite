@@ -5,8 +5,8 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.4.2
-Release: 3%{?dist}
+Version: 3.5.4
+Release: 1%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -106,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Dec 21 2007 Panu Matilainen <pmatilai@redhat.com> - 3.5.4-1
+- Update to 3.5.4 (#413801)
+
 * Fri Sep 28 2007 Panu Matilainen <pmatilai@redhat.com> - 3.4.2-3
 - Add another build conditional for enabling %%check
 
