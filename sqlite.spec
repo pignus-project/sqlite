@@ -6,7 +6,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.5.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -91,7 +91,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-, root, root)
-%doc doc/
+%doc doc/*.*
 %{_includedir}/*.h
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
@@ -106,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Jan 08 2008 Panu Matilainen <pmatilai@redhat.com> - 3.5.4-2
+- avoid packaging CVS directory as documentation (#427755)
+
 * Fri Dec 21 2007 Panu Matilainen <pmatilai@redhat.com> - 3.5.4-1
 - Update to 3.5.4 (#413801)
 
