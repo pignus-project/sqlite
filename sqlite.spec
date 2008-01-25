@@ -6,7 +6,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.5.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -52,7 +52,7 @@ This package contains the tcl modules for %{name}.
 %setup -q
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_DISABLE_DIRSYNC=1 -Wall"
+export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -Wall"
 %configure %{!?with_tcl:--disable-tcl} \
            --enable-threadsafe \
            --enable-threads-override-locks 
@@ -106,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Jan 25 2008 Panu Matilainen <pmatilai@redhat.com> - 3.5.4-3
+- enable column metadata API (#430258)
+
 * Tue Jan 08 2008 Panu Matilainen <pmatilai@redhat.com> - 3.5.4-2
 - avoid packaging CVS directory as documentation (#427755)
 
