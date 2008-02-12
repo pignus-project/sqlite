@@ -5,8 +5,8 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.5.4
-Release: 3%{?dist}
+Version: 3.5.6
+Release: 1%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -106,6 +106,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Feb 12 2008 Panu Matilainen <pmatilai@redhat.com> - 3.5.6-1
+- update to 3.5.6
+- also fixes #432447
+
 * Fri Jan 25 2008 Panu Matilainen <pmatilai@redhat.com> - 3.5.4-3
 - enable column metadata API (#430258)
 
