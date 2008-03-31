@@ -6,7 +6,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.5.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -34,9 +34,9 @@ Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
 
 %description devel
-This package contains the header files, static libraries and development
-documentation for %{name}. If you like to develop programs using %{name},
-you will need to install %{name}-devel.
+This package contains the header files and development documentation 
+for %{name}. If you like to develop programs using %{name}, you will need 
+to install %{name}-devel.
 
 %if %{with tcl}
 %package tcl
@@ -106,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Mar 31 2008 Panu Matilainen <pmatilai@redhat.com> - 3.5.6-2
+- remove reference to static libs from -devel description (#439376)
+
 * Tue Feb 12 2008 Panu Matilainen <pmatilai@redhat.com> - 3.5.6-1
 - update to 3.5.6
 - also fixes #432447
