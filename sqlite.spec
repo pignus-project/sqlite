@@ -5,12 +5,13 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.5.6
-Release: 2%{?dist}
+Version: 3.5.8
+Release: 1%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
 Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
+Patch1: sqlite-3.5.8-pkgconfig-version.patch
 Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: /usr/bin/tclsh
@@ -50,12 +51,14 @@ This package contains the tcl modules for %{name}.
 
 %prep
 %setup -q
+%patch1 -p1 -b .pkgconf
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -Wall"
 %configure %{!?with_tcl:--disable-tcl} \
            --enable-threadsafe \
-           --enable-threads-override-locks 
+           --enable-threads-override-locks
+
 make %{?_smp_mflags}
 make doc
 
@@ -106,6 +109,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Apr 23 2008 Panu Matilainen <pmatilai@redhat.com> - 3.5.8-1
+- update to 3.5.8
+- provide full version in pkg-config (#443692)
+
 * Mon Mar 31 2008 Panu Matilainen <pmatilai@redhat.com> - 3.5.6-2
 - remove reference to static libs from -devel description (#439376)
 
