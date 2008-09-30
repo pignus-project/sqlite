@@ -1,0 +1,11 @@
+diff -up sqlite-3.5.9/configure.libdl sqlite-3.5.9/configure
+--- sqlite-3.5.9/configure.libdl	2008-09-22 18:37:55.000000000 +0300
++++ sqlite-3.5.9/configure	2008-09-22 18:38:11.000000000 +0300
+@@ -12067,6 +12067,7 @@ else
+ fi;
+ if test "${use_loadextension}" = "yes" ; then
+   LOADEXTENSION_FLAGS=""
++  LIBS="-ldl $LIBS"
+ else
+   LOADEXTENSION_FLAGS="-DSQLITE_OMIT_LOAD_EXTENSION=1"
+ fi

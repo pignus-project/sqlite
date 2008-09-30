@@ -6,12 +6,16 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.5.9
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
 Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
 Patch1: sqlite-3.5.8-pkgconfig-version.patch
+# Kludge -ldl into LIBS for load-extension
+Patch2: sqlite-3.5.9-libdl.patch
+# Upstream fix for http://www.sqlite.org/cvstrac/tktview?tn=3201
+Patch3: sqlite-3.5.9-remove-temporary.patch
 Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: /usr/bin/tclsh
@@ -52,12 +56,15 @@ This package contains the tcl modules for %{name}.
 %prep
 %setup -q
 %patch1 -p1 -b .pkgconf
+%patch2 -p1 -b .libdl
+%patch3 -p1 -b .remove-temp
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -Wall"
 %configure %{!?with_tcl:--disable-tcl} \
            --enable-threadsafe \
-           --enable-threads-override-locks
+           --enable-threads-override-locks \
+           --enable-load-extension 
 
 make %{?_smp_mflags}
 make doc
@@ -109,6 +116,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Sep 22 2008 Panu Matilainen <pmatilai@redhat.com> - 3.5.9-2
+- Remove references to temporary registers from cache on release (#463061)
+- Enable loading of external extensions (#457433)
+
 * Tue Jun 17 2008 Stepan Kasal <skasal@redhat.com> - 3.5.9-1
 - update to 3.5.9
 
