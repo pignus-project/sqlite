@@ -5,17 +5,14 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.5.9
-Release: 2%{?dist}
+Version: 3.6.4
+Release: 1%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
 Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
-Patch1: sqlite-3.5.8-pkgconfig-version.patch
-# Kludge -ldl into LIBS for load-extension
-Patch2: sqlite-3.5.9-libdl.patch
-# Upstream fix for http://www.sqlite.org/cvstrac/tktview?tn=3201
-Patch3: sqlite-3.5.9-remove-temporary.patch
+# Fix build with --enable-load-extension, upstream ticket #3137
+Patch1: sqlite-3.6.4-libdl.patch
 Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: /usr/bin/tclsh
@@ -55,9 +52,7 @@ This package contains the tcl modules for %{name}.
 
 %prep
 %setup -q
-%patch1 -p1 -b .pkgconf
-%patch2 -p1 -b .libdl
-%patch3 -p1 -b .remove-temp
+%patch1 -p1 -b .libdl
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -Wall"
@@ -101,7 +96,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-, root, root)
-%doc doc/*.*
 %{_includedir}/*.h
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
@@ -116,6 +110,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Nov 08 2008 Panu Matilainen <pmatilai@redhat.com> - 3.6.4-1
+- update to 3.6.4
+- drop patches already upstream
+
 * Mon Sep 22 2008 Panu Matilainen <pmatilai@redhat.com> - 3.5.9-2
 - Remove references to temporary registers from cache on release (#463061)
 - Enable loading of external extensions (#457433)
