@@ -71,7 +71,7 @@ diff -up sqlite-3.6.4/configure.orig sqlite-3.6.4/configure
  
  
  # The following RCS revision string applies to configure.in
--# $Revision: 1.64 $
+-# $Revision: 1.65 $
 +# $Revision: 1.49 $
  
  #########

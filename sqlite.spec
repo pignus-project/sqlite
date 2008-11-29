@@ -5,14 +5,14 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.6.4
+Version: 3.6.6.2
 Release: 1%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
 Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
 # Fix build with --enable-load-extension, upstream ticket #3137
-Patch1: sqlite-3.6.4-libdl.patch
+Patch1: sqlite-3.6.6.2-libdl.patch
 Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: /usr/bin/tclsh
@@ -110,6 +110,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Nov 29 2008 Panu Matilainen <pmatilai@redhat.com> - 3.6.6.2-1
+- update to 3.6.6.2
+
 * Sat Nov 08 2008 Panu Matilainen <pmatilai@redhat.com> - 3.6.4-1
 - update to 3.6.4
 - drop patches already upstream
