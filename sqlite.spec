@@ -6,7 +6,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.6.6.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -18,6 +18,8 @@ BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: /usr/bin/tclsh
 %if %{with tcl}
 BuildRequires: tcl-devel
+%{!?tcl_version: %global tcl_version %(echo 'puts $tcl_version' | tclsh)}
+%{!?tcl_sitearch: %global tcl_sitearch %{_libdir}/tcl%{tcl_version}}
 %endif
 BuildRoot: %{_tmppath}/%{name}-root
 
@@ -34,6 +36,7 @@ are named to permit each to be installed on a single host
 Summary: Development tools for the sqlite3 embeddable SQL database engine.
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
+Requires: pkgconfig
 
 %description devel
 This package contains the header files and development documentation 
@@ -45,6 +48,7 @@ to install %{name}-devel.
 Summary: Tcl module for the sqlite3 embeddable SQL database engine.
 Group: Development/Languages
 Requires: %{name} = %{version}-%{release}
+Requires: tcl(abi) = %{tcl_version}
 
 %description tcl
 This package contains the tcl modules for %{name}.
@@ -67,9 +71,14 @@ make doc
 %install
 rm -rf $RPM_BUILD_ROOT
 
-make DESTDIR=${RPM_BUILD_ROOT} install
+make DESTDIR=${RPM_BUILD_ROOT} %{?with_tcl:TCLLIBDIR=%{tcl_sitearch}} install
 
 %{__install} -D -m0644 sqlite3.1 %{buildroot}%{_mandir}/man1/sqlite3.1
+
+%if %{with tcl}
+# fix up permissions to enable dep extraction
+chmod 0755 ${RPM_BUILD_ROOT}/%{tcl_sitearch}/sqlite3/*.so
+%endif
 
 %if ! %{with static}
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
@@ -103,13 +112,20 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 %exclude %{_libdir}/*.la
 %endif
+
 %if %{with tcl}
 %files tcl
 %defattr(-, root, root)
-%{_datadir}/tcl*/sqlite3
+%{tcl_sitearch}/sqlite3
 %endif
 
 %changelog
+* Tue Dec 02 2008 Panu Matilainen <pmatilai@redhat.com> - 3.6.6.2-2
+- require tcl(abi) in sqlite-tcl subpackage (#474034)
+- move tcl extensions to arch-specific location
+- enable dependency extraction on the tcl dso
+- require pkgconfig in sqlite-devel
+
 * Sat Nov 29 2008 Panu Matilainen <pmatilai@redhat.com> - 3.6.6.2-1
 - update to 3.6.6.2
 
