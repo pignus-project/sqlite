@@ -15,10 +15,10 @@ Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
 Patch1: sqlite-3.6.6.2-libdl.patch
 Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel glibc-devel
-BuildRequires: /usr/bin/tclsh
 %if %{with tcl}
+BuildRequires: /usr/bin/tclsh
 BuildRequires: tcl-devel
-%{!?tcl_version: %global tcl_version %(echo 'puts $tcl_version' | tclsh)}
+%{!?tcl_version: %global tcl_version 8.5}
 %{!?tcl_sitearch: %global tcl_sitearch %{_libdir}/tcl%{tcl_version}}
 %endif
 BuildRoot: %{_tmppath}/%{name}-root
