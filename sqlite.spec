@@ -6,13 +6,15 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.6.6.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
 Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
 # Fix build with --enable-load-extension, upstream ticket #3137
 Patch1: sqlite-3.6.6.2-libdl.patch
+# Avoid insecure sprintf(), use a system path for lempar.c, patch from Debian
+Patch2: sqlite-3.6.6.2-lemon-snprintf.patch
 Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel glibc-devel
 %if %{with tcl}
@@ -43,6 +45,21 @@ This package contains the header files and development documentation
 for %{name}. If you like to develop programs using %{name}, you will need 
 to install %{name}-devel.
 
+%package -n lemon
+Summary: A parser generator
+Group: Development/Tools
+
+%description -n lemon
+Lemon is an LALR(1) parser generator for C or C++. It does the same
+job as bison and yacc. But lemon is not another bison or yacc
+clone. It uses a different grammar syntax which is designed to reduce
+the number of coding errors. Lemon also uses a more sophisticated
+parsing engine that is faster than yacc and bison and which is both
+reentrant and thread-safe. Furthermore, Lemon implements features
+that can be used to eliminate resource leaks, making is suitable for
+use in long-running programs such as graphical user interfaces or
+embedded controllers.
+
 %if %{with tcl}
 %package tcl
 Summary: Tcl module for the sqlite3 embeddable SQL database engine.
@@ -57,6 +74,7 @@ This package contains the tcl modules for %{name}.
 %prep
 %setup -q
 %patch1 -p1 -b .libdl
+%patch2 -p1 -b .lemon-sprintf
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -Wall"
@@ -73,7 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 
 make DESTDIR=${RPM_BUILD_ROOT} %{?with_tcl:TCLLIBDIR=%{tcl_sitearch}} install
 
-%{__install} -D -m0644 sqlite3.1 %{buildroot}%{_mandir}/man1/sqlite3.1
+install -D -m0644 sqlite3.1 $RPM_BUILD_ROOT/%{_mandir}/man1/sqlite3.1
+install -D -m0755 lemon $RPM_BUILD_ROOT/%{_bindir}/lemon
+install -D -m0655 tool/lempar.c $RPM_BUILD_ROOT/%{_datadir}/lemon/lempar.c
 
 %if %{with tcl}
 # fix up permissions to enable dep extraction
@@ -113,6 +133,11 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_libdir}/*.la
 %endif
 
+%files -n lemon
+%defattr(-, root, root)
+%{_bindir}/lemon
+%{_datadir}/lemon
+
 %if %{with tcl}
 %files tcl
 %defattr(-, root, root)
@@ -120,6 +145,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Dec 05 2008 Panu Matilainen <pmatilai@redhat.com> - 3.6.6.2-4
+- add lemon subpackage
+
 * Thu Dec  4 2008 Matthias Clasen <mclasen@redhat.com> - 3.6.6.2-3
 - Rebuild for pkg-config provides 
 
