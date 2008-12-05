@@ -6,7 +6,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.6.6.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -120,6 +120,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Dec  4 2008 Matthias Clasen <mclasen@redhat.com> - 3.6.6.2-3
+- Rebuild for pkg-config provides 
+
 * Tue Dec 02 2008 Panu Matilainen <pmatilai@redhat.com> - 3.6.6.2-2
 - require tcl(abi) in sqlite-tcl subpackage (#474034)
 - move tcl extensions to arch-specific location
