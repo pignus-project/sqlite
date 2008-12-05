@@ -93,7 +93,7 @@ make DESTDIR=${RPM_BUILD_ROOT} %{?with_tcl:TCLLIBDIR=%{tcl_sitearch}} install
 
 install -D -m0644 sqlite3.1 $RPM_BUILD_ROOT/%{_mandir}/man1/sqlite3.1
 install -D -m0755 lemon $RPM_BUILD_ROOT/%{_bindir}/lemon
-install -D -m0655 tool/lempar.c $RPM_BUILD_ROOT/%{_datadir}/lemon/lempar.c
+install -D -m0644 tool/lempar.c $RPM_BUILD_ROOT/%{_datadir}/lemon/lempar.c
 
 %if %{with tcl}
 # fix up permissions to enable dep extraction
