@@ -5,8 +5,8 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.6.6.2
-Release: 4%{?dist}
+Version: 3.6.7
+Release: 1%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -119,7 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-, root, root)
 %doc README
-%{_bindir}/*
+%{_bindir}/sqlite3
 %{_libdir}/*.so.*
 %{_mandir}/man?/*
 
@@ -145,6 +145,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Dec 31 2008 Panu Matilainen <pmatilai@redhat.com> - 3.6.7-1
+- update to 3.6.7
+- avoid lemon ending up in main sqlite package too
+
 * Fri Dec 05 2008 Panu Matilainen <pmatilai@redhat.com> - 3.6.6.2-4
 - add lemon subpackage
 
