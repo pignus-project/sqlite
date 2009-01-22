@@ -6,7 +6,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.6.10
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -15,6 +15,8 @@ Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
 Patch1: sqlite-3.6.6.2-libdl.patch
 # Avoid insecure sprintf(), use a system path for lempar.c, patch from Debian
 Patch2: sqlite-3.6.6.2-lemon-snprintf.patch
+# Upstream fix http://www.sqlite.org/cvstrac/chngview?cn=6186
+Patch3: sqlite-3.6.10-keywords.patch
 Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel glibc-devel
 %if %{with tcl}
@@ -75,6 +77,7 @@ This package contains the tcl modules for %{name}.
 %setup -q
 %patch1 -p1 -b .libdl
 %patch2 -p1 -b .lemon-sprintf
+%patch3 -p1 -b .keywords
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -Wall"
@@ -145,6 +148,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Jan 22 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.10-2
+- upstream fix yum breakage caused by new keywords (#481189)
+
 * Thu Jan 22 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.10-1
 - update to 3.6.10
 
