@@ -6,7 +6,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.6.10
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -80,7 +80,7 @@ This package contains the tcl modules for %{name}.
 %patch3 -p1 -b .keywords
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -Wall"
+export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -DSQLITE_ENABLE_FTS3=3 -DSQLITE_ENABLE_RTREE=1 -Wall"
 %configure %{!?with_tcl:--disable-tcl} \
            --enable-threadsafe \
            --enable-threads-override-locks \
@@ -148,6 +148,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Feb 04 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.10-3
+- enable RTREE and FTS3 extensions (#481417)
+
 * Thu Jan 22 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.10-2
 - upstream fix yum breakage caused by new keywords (#481189)
 
