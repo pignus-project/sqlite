@@ -18,6 +18,8 @@ Patch2: sqlite-3.6.6.2-lemon-snprintf.patch
 Patch3: sqlite-3.6.12-no-sqlite-doc.patch
 Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel glibc-devel
+# libdl patch needs
+BuildRequires: autoconf
 %if %{with tcl}
 BuildRequires: /usr/bin/tclsh
 BuildRequires: tcl-devel
