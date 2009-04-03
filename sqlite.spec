@@ -5,18 +5,17 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.6.10
-Release: 4%{?dist}
+Version: 3.6.12
+Release: 1%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
 Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
 # Fix build with --enable-load-extension, upstream ticket #3137
-Patch1: sqlite-3.6.6.2-libdl.patch
+Patch1: sqlite-3.6.12-libdl.patch
 # Avoid insecure sprintf(), use a system path for lempar.c, patch from Debian
 Patch2: sqlite-3.6.6.2-lemon-snprintf.patch
-# Upstream fix http://www.sqlite.org/cvstrac/chngview?cn=6186
-Patch3: sqlite-3.6.10-keywords.patch
+Patch3: sqlite-3.6.12-no-sqlite-doc.patch
 Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel glibc-devel
 %if %{with tcl}
@@ -77,14 +76,16 @@ This package contains the tcl modules for %{name}.
 %setup -q
 %patch1 -p1 -b .libdl
 %patch2 -p1 -b .lemon-sprintf
-%patch3 -p1 -b .keywords
+%patch3 -p1 -b .no-sqlite-doc
 
 %build
+autoconf
 export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -DSQLITE_ENABLE_FTS3=3 -DSQLITE_ENABLE_RTREE=1 -Wall"
 %configure %{!?with_tcl:--disable-tcl} \
            --enable-threadsafe \
            --enable-threads-override-locks \
-           --enable-load-extension 
+           --enable-load-extension \
+	   %{?with_tcl:TCLLIBDIR=%{tcl_sitearch}/sqlite3}
 
 make %{?_smp_mflags}
 make doc
@@ -92,7 +93,7 @@ make doc
 %install
 rm -rf $RPM_BUILD_ROOT
 
-make DESTDIR=${RPM_BUILD_ROOT} %{?with_tcl:TCLLIBDIR=%{tcl_sitearch}} install
+make DESTDIR=${RPM_BUILD_ROOT} install
 
 install -D -m0644 sqlite3.1 $RPM_BUILD_ROOT/%{_mandir}/man1/sqlite3.1
 install -D -m0755 lemon $RPM_BUILD_ROOT/%{_bindir}/lemon
@@ -148,6 +149,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Apr 03 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.12-1
+- update to 3.6.12 (#492662)
+- remove reference to non-existent sqlite-doc from manual (#488883)
+
 * Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.6.10-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 

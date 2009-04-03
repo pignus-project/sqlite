@@ -1,0 +1,12 @@
+diff -up sqlite-3.6.12/sqlite3.1.no-sqlite-doc sqlite-3.6.12/sqlite3.1
+--- sqlite-3.6.12/sqlite3.1.no-sqlite-doc	2009-04-03 12:37:35.000000000 +0300
++++ sqlite-3.6.12/sqlite3.1	2009-04-03 12:37:44.000000000 +0300
+@@ -221,8 +221,6 @@ o All other command line options are pro
+ 
+ .SH SEE ALSO
+ http://www.sqlite.org/
+-.br
+-The sqlite-doc package
+ .SH AUTHOR
+ This manual page was originally written by Andreas Rottmann
+ <rotty@debian.org>, for the Debian GNU/Linux system (but may be used
