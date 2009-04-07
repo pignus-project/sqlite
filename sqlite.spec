@@ -1,12 +1,12 @@
 # bcond default logic is nicely backwards...
 %bcond_without tcl
 %bcond_with static
-%bcond_with check
+%bcond_without check
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.6.12
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -82,7 +82,7 @@ This package contains the tcl modules for %{name}.
 
 %build
 autoconf
-export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -DSQLITE_ENABLE_FTS3=3 -DSQLITE_ENABLE_RTREE=1 -Wall"
+export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -DSQLITE_ENABLE_FTS3=3 -DSQLITE_ENABLE_RTREE=1 -Wall -fno-strict-aliasing"
 %configure %{!?with_tcl:--disable-tcl} \
            --enable-threadsafe \
            --enable-threads-override-locks \
@@ -112,7 +112,11 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 
 %if %{with check}
 %check
-make test
+# let this fail for now:
+# - io-4.1 and io-4.2.3 fail everywhere
+# - five nan-test broken on PPC (upstream ticket #3404)
+# - bunch of rtree-tests failing on PPC atm
+make test ||:
 %endif
 
 %clean
@@ -151,6 +155,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Apr 07 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.12-2
+- disable strict aliasing to work around brokenness on 3.6.12 (#494266)
+- run test-suite on build but let it fail for now
+
 * Fri Apr 03 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.12-1
 - update to 3.6.12 (#492662)
 - remove reference to non-existent sqlite-doc from manual (#488883)
