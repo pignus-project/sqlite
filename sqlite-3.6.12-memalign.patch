@@ -1,0 +1,204 @@
+---------------------
+PatchSet 6171 
+Date: 2009/04/05 15:22:09
+Author: drh
+Branch: HEAD
+Tag: (none) 
+Branches: 
+Log:
+Additional code to make sure and to assert that memory allocations have
+8-byte alignment.  Ticket #3777.
+
+Members: 
+	src/btree.c:1.589->1.590 
+	src/memjournal.c:1.10->1.11 
+	src/pager.c:1.577->1.578 
+	src/sqliteInt.h:1.850->1.851 
+	src/vdbeaux.c:1.446->1.447 
+	src/vdbemem.c:1.139->1.140 
+
+Index: sqlite/src/btree.c
+diff -u sqlite/src/btree.c:1.589 sqlite/src/btree.c:1.590
+--- sqlite/src/btree.c:1.589	Thu Apr  2 20:16:59 2009
++++ sqlite/src/btree.c	Sun Apr  5 12:22:09 2009
+@@ -5357,13 +5357,13 @@
+   }
+   szCell = (u16*)&apCell[nMaxCells];
+   aCopy[0] = (u8*)&szCell[nMaxCells];
+-  assert( ((aCopy[0] - (u8*)0) & 7)==0 ); /* 8-byte alignment required */
++  assert( EIGHT_BYTE_ALIGNMENT(aCopy[0]) );
+   for(i=1; i<NB; i++){
+     aCopy[i] = &aCopy[i-1][pBt->pageSize+ROUND8(sizeof(MemPage))];
+     assert( ((aCopy[i] - (u8*)0) & 7)==0 ); /* 8-byte alignment required */
+   }
+   aSpace1 = &aCopy[NB-1][pBt->pageSize+ROUND8(sizeof(MemPage))];
+-  assert( ((aSpace1 - (u8*)0) & 7)==0 ); /* 8-byte alignment required */
++  assert( EIGHT_BYTE_ALIGNMENT(aSpace1) );
+   if( ISAUTOVACUUM ){
+     aFrom = &aSpace1[pBt->pageSize];
+   }
+Index: sqlite/src/memjournal.c
+diff -u sqlite/src/memjournal.c:1.10 sqlite/src/memjournal.c:1.11
+--- sqlite/src/memjournal.c:1.10	Thu Apr  2 17:22:42 2009
++++ sqlite/src/memjournal.c	Sun Apr  5 12:22:09 2009
+@@ -237,6 +237,7 @@
+ */
+ void sqlite3MemJournalOpen(sqlite3_file *pJfd){
+   MemJournal *p = (MemJournal *)pJfd;
++  assert( EIGHT_BYTE_ALIGNMENT(p) );
+   memset(p, 0, sqlite3MemJournalSize());
+   p->pMethod = &MemJournalMethods;
+ }
+Index: sqlite/src/pager.c
+diff -u sqlite/src/pager.c:1.577 sqlite/src/pager.c:1.578
+--- sqlite/src/pager.c:1.577	Sat Apr  4 15:53:48 2009
++++ sqlite/src/pager.c	Sun Apr  5 12:22:09 2009
+@@ -3114,9 +3114,9 @@
+   ** source file journal.c).
+   */
+   if( sqlite3JournalSize(pVfs)>sqlite3MemJournalSize() ){
+-    journalFileSize = sqlite3JournalSize(pVfs);
++    journalFileSize = ROUND8(sqlite3JournalSize(pVfs));
+   }else{
+-    journalFileSize = sqlite3MemJournalSize();
++    journalFileSize = ROUND8(sqlite3MemJournalSize());
+   }
+ 
+   /* Set the output variable to NULL in case an error occurs. */
+@@ -3172,23 +3172,25 @@
+   **     Journal file name               (nPathname+8+1 bytes)
+   */
+   pPtr = (u8 *)sqlite3MallocZero(
+-    sizeof(*pPager) +           /* Pager structure */
+-    pcacheSize      +           /* PCache object */
+-    pVfs->szOsFile  +           /* The main db file */
+-    journalFileSize * 2 +       /* The two journal files */ 
+-    nPathname + 1 +             /* zFilename */
+-    nPathname + 8 + 1           /* zJournal */
++    ROUND8(sizeof(*pPager)) +      /* Pager structure */
++    ROUND8(pcacheSize) +           /* PCache object */
++    ROUND8(pVfs->szOsFile) +       /* The main db file */
++    journalFileSize * 2 +          /* The two journal files */ 
++    nPathname + 1 +                /* zFilename */
++    nPathname + 8 + 1              /* zJournal */
+   );
++  assert( EIGHT_BYTE_ALIGNMENT(journalFileSize) );
+   if( !pPtr ){
+     sqlite3_free(zPathname);
+     return SQLITE_NOMEM;
+   }
+   pPager =              (Pager*)(pPtr);
+-  pPager->pPCache =    (PCache*)(pPtr += sizeof(*pPager));
+-  pPager->fd =   (sqlite3_file*)(pPtr += pcacheSize);
+-  pPager->sjfd = (sqlite3_file*)(pPtr += pVfs->szOsFile);
++  pPager->pPCache =    (PCache*)(pPtr += ROUND8(sizeof(*pPager)));
++  pPager->fd =   (sqlite3_file*)(pPtr += ROUND8(pcacheSize));
++  pPager->sjfd = (sqlite3_file*)(pPtr += ROUND8(pVfs->szOsFile));
+   pPager->jfd =  (sqlite3_file*)(pPtr += journalFileSize);
+   pPager->zFilename =    (char*)(pPtr += journalFileSize);
++  assert( EIGHT_BYTE_ALIGNMENT(pPager->jfd) );
+ 
+   /* Fill in the Pager.zFilename and Pager.zJournal buffers, if required. */
+   if( zPathname ){
+Index: sqlite/src/sqliteInt.h
+diff -u sqlite/src/sqliteInt.h:1.850 sqlite/src/sqliteInt.h:1.851
+--- sqlite/src/sqliteInt.h:1.850	Wed Apr  1 18:03:01 2009
++++ sqlite/src/sqliteInt.h	Sun Apr  5 12:22:09 2009
+@@ -456,6 +456,11 @@
+ #define ROUNDDOWN8(x) ((x)&~7)
+ 
+ /*
++** Assert that the pointer X is aligned to an 8-byte boundary.
++*/
++#define EIGHT_BYTE_ALIGNMENT(X)   ((((char*)(X) - (char*)0)&7)==0)
++
++/*
+ ** An instance of the following structure is used to store the busy-handler
+ ** callback for a given sqlite handle. 
+ **
+Index: sqlite/src/vdbeaux.c
+diff -u sqlite/src/vdbeaux.c:1.446 sqlite/src/vdbeaux.c:1.447
+--- sqlite/src/vdbeaux.c:1.446	Wed Mar 25 15:43:09 2009
++++ sqlite/src/vdbeaux.c	Sun Apr  5 12:22:09 2009
+@@ -1023,6 +1023,7 @@
+   u8 *pEnd,            /* Pointer to 1 byte past the end of *ppFrom buffer */
+   int *pnByte          /* If allocation cannot be made, increment *pnByte */
+ ){
++  assert( EIGHT_BYTE_ALIGNMENT(*ppFrom) );
+   if( (*(void**)pp)==0 ){
+     nByte = ROUND8(nByte);
+     if( (pEnd - *ppFrom)>=nByte ){
+@@ -1096,6 +1097,8 @@
+     if( isExplain && nMem<10 ){
+       nMem = 10;
+     }
++    zCsr += (zCsr - (u8*)0)&7;
++    assert( EIGHT_BYTE_ALIGNMENT(zCsr) );
+ 
+     do {
+       memset(zCsr, 0, zEnd-zCsr);
+Index: sqlite/src/vdbemem.c
+diff -u sqlite/src/vdbemem.c:1.139 sqlite/src/vdbemem.c:1.140
+--- sqlite/src/vdbemem.c:1.139	Sun Mar 29 15:12:10 2009
++++ sqlite/src/vdbemem.c	Sun Apr  5 12:22:09 2009
+@@ -209,6 +209,7 @@
+   assert( !(fg&(MEM_Str|MEM_Blob)) );
+   assert( fg&(MEM_Int|MEM_Real) );
+   assert( (pMem->flags&MEM_RowSet)==0 );
++  assert( EIGHT_BYTE_ALIGNMENT(pMem) );
+ 
+ 
+   if( sqlite3VdbeMemGrow(pMem, nByte, 0) ){
+@@ -345,6 +346,7 @@
+ i64 sqlite3VdbeIntValue(Mem *pMem){
+   int flags;
+   assert( pMem->db==0 || sqlite3_mutex_held(pMem->db->mutex) );
++  assert( EIGHT_BYTE_ALIGNMENT(pMem) );
+   flags = pMem->flags;
+   if( flags & MEM_Int ){
+     return pMem->u.i;
+@@ -373,6 +375,7 @@
+ */
+ double sqlite3VdbeRealValue(Mem *pMem){
+   assert( pMem->db==0 || sqlite3_mutex_held(pMem->db->mutex) );
++  assert( EIGHT_BYTE_ALIGNMENT(pMem) );
+   if( pMem->flags & MEM_Real ){
+     return pMem->r;
+   }else if( pMem->flags & MEM_Int ){
+@@ -403,6 +406,7 @@
+   assert( pMem->flags & MEM_Real );
+   assert( (pMem->flags & MEM_RowSet)==0 );
+   assert( pMem->db==0 || sqlite3_mutex_held(pMem->db->mutex) );
++  assert( EIGHT_BYTE_ALIGNMENT(pMem) );
+ 
+   pMem->u.i = doubleToInt64(pMem->r);
+   if( pMem->r==(double)pMem->u.i ){
+@@ -416,6 +420,8 @@
+ int sqlite3VdbeMemIntegerify(Mem *pMem){
+   assert( pMem->db==0 || sqlite3_mutex_held(pMem->db->mutex) );
+   assert( (pMem->flags & MEM_RowSet)==0 );
++  assert( EIGHT_BYTE_ALIGNMENT(pMem) );
++
+   pMem->u.i = sqlite3VdbeIntValue(pMem);
+   MemSetTypeFlag(pMem, MEM_Int);
+   return SQLITE_OK;
+@@ -427,6 +433,8 @@
+ */
+ int sqlite3VdbeMemRealify(Mem *pMem){
+   assert( pMem->db==0 || sqlite3_mutex_held(pMem->db->mutex) );
++  assert( EIGHT_BYTE_ALIGNMENT(pMem) );
++
+   pMem->r = sqlite3VdbeRealValue(pMem);
+   MemSetTypeFlag(pMem, MEM_Real);
+   return SQLITE_OK;
+diff -u sqlite/src/vdbeaux.c:1.447 sqlite/src/vdbeaux.c:1.448
+--- sqlite/src/vdbeaux.c:1.447	Sun Apr  5 12:22:09 2009
++++ sqlite/src/vdbeaux.c	Mon Apr  6 11:11:43 2009
+@@ -1099,6 +1099,7 @@
+     }
+     zCsr += (zCsr - (u8*)0)&7;
+     assert( EIGHT_BYTE_ALIGNMENT(zCsr) );
++    if( zEnd<zCsr ) zEnd = zCsr;
+ 
+     do {
+       memset(zCsr, 0, zEnd-zCsr);
