@@ -5,8 +5,8 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.6.12
-Release: 3%{?dist}
+Version: 3.6.13
+Release: 1%{?dist}
 License: Public Domain
 Group: 	Applications/Databases
 URL: http://www.sqlite.org/
@@ -16,7 +16,6 @@ Patch1: sqlite-3.6.12-libdl.patch
 # Avoid insecure sprintf(), use a system path for lempar.c, patch from Debian
 Patch2: sqlite-3.6.6.2-lemon-snprintf.patch
 Patch3: sqlite-3.6.12-no-sqlite-doc.patch
-Patch4: sqlite-3.6.12-memalign.patch
 Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel glibc-devel
 # libdl patch needs
@@ -80,7 +79,6 @@ This package contains the tcl modules for %{name}.
 %patch1 -p1 -b .libdl
 %patch2 -p1 -b .lemon-sprintf
 %patch3 -p1 -b .no-sqlite-doc
-%patch4 -p1 -b .align
 
 %build
 autoconf
@@ -157,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Apr 15 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.13-1
+- update to 3.6.13
+
 * Thu Apr 09 2009 Dennis Gilmore <dennis@ausil.us> - 3.6.12-3
 - apply upstream patch for memory alignment issue (#494906)
 
