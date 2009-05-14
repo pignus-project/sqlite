@@ -8,7 +8,7 @@ Name: sqlite
 Version: 3.6.13
 Release: 1%{?dist}
 License: Public Domain
-Group: 	Applications/Databases
+Group: Applications/Databases
 URL: http://www.sqlite.org/
 Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
 # Fix build with --enable-load-extension, upstream ticket #3137
@@ -16,7 +16,6 @@ Patch1: sqlite-3.6.12-libdl.patch
 # Avoid insecure sprintf(), use a system path for lempar.c, patch from Debian
 Patch2: sqlite-3.6.6.2-lemon-snprintf.patch
 Patch3: sqlite-3.6.12-no-sqlite-doc.patch
-Obsoletes: sqlite3 sqlite3-devel
 BuildRequires: ncurses-devel readline-devel glibc-devel
 # libdl patch needs
 BuildRequires: autoconf
@@ -38,7 +37,7 @@ supporting a separate database server.  Version 2 and version 3 binaries
 are named to permit each to be installed on a single host
 
 %package devel
-Summary: Development tools for the sqlite3 embeddable SQL database engine.
+Summary: Development tools for the sqlite3 embeddable SQL database engine
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
@@ -65,7 +64,7 @@ embedded controllers.
 
 %if %{with tcl}
 %package tcl
-Summary: Tcl module for the sqlite3 embeddable SQL database engine.
+Summary: Tcl module for the sqlite3 embeddable SQL database engine
 Group: Development/Languages
 Requires: %{name} = %{version}-%{release}
 Requires: tcl(abi) = %{tcl_version}
@@ -87,7 +86,7 @@ export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE
            --enable-threadsafe \
            --enable-threads-override-locks \
            --enable-load-extension \
-	   %{?with_tcl:TCLLIBDIR=%{tcl_sitearch}/sqlite3}
+           %{?with_tcl:TCLLIBDIR=%{tcl_sitearch}/sqlite3}
 
 make %{?_smp_mflags}
 make doc
@@ -155,6 +154,12 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu May 14 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.13-2
+- merge-review cosmetics (#226429)
+  - drop ancient sqlite3 obsoletes
+  - fix tab vs space whitespace issues
+  - remove commas from summaries
+
 * Wed Apr 15 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.13-1
 - update to 3.6.13
 
