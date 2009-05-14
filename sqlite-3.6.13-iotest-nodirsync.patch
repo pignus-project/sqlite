@@ -1,0 +1,13 @@
+diff -up sqlite-3.6.13/test/io.test.nodirsync sqlite-3.6.13/test/io.test
+--- sqlite-3.6.13/test/io.test.nodirsync	2009-05-14 12:12:21.000000000 +0300
++++ sqlite-3.6.13/test/io.test	2009-05-14 12:13:51.000000000 +0300
+@@ -426,7 +426,8 @@ sqlite3_simulate_device -char safe_appen
+ # on the journal file between steps (2) and (3) above.
+ #
+ if {$::tcl_platform(platform)=="unix"} {
+-  set expected_sync_count 3
++  # normally 3 but with -DSQLITE_DISABLE_DIRSYNC its 2
++  set expected_sync_count 2
+ } else {
+   set expected_sync_count 2
+ }

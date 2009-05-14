@@ -16,6 +16,8 @@ Patch1: sqlite-3.6.12-libdl.patch
 # Avoid insecure sprintf(), use a system path for lempar.c, patch from Debian
 Patch2: sqlite-3.6.6.2-lemon-snprintf.patch
 Patch3: sqlite-3.6.12-no-sqlite-doc.patch
+# Fixup io-test fsync expectations wrt SQLITE_DISABLE_DIRSYNC
+Patch4: sqlite-3.6.13-iotest-nodirsync.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
 # libdl patch needs
 BuildRequires: autoconf
@@ -78,6 +80,7 @@ This package contains the tcl modules for %{name}.
 %patch1 -p1 -b .libdl
 %patch2 -p1 -b .lemon-sprintf
 %patch3 -p1 -b .no-sqlite-doc
+%patch4 -p1 -b .nodirsync
 
 %build
 autoconf
@@ -112,7 +115,6 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 %if %{with check}
 %check
 # let this fail for now:
-# - io-4.1 and io-4.2.3 fail everywhere
 # - five nan-test broken on PPC (upstream ticket #3404)
 # - bunch of rtree-tests failing on PPC atm
 make test ||:
@@ -159,6 +161,7 @@ rm -rf $RPM_BUILD_ROOT
   - drop ancient sqlite3 obsoletes
   - fix tab vs space whitespace issues
   - remove commas from summaries
+- fixup io-test fsync expectations wrt SQLITE_DISABLE_DIRSYNC
 
 * Wed Apr 15 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.13-1
 - update to 3.6.13
