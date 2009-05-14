@@ -5,7 +5,7 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.6.13
+Version: 3.6.14
 Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
@@ -156,7 +156,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Thu May 14 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.13-2
+* Thu May 14 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.14-1
+- update to 3.6.14 (http://www.sqlite.org/releaselog/3_6_14.html)
 - merge-review cosmetics (#226429)
   - drop ancient sqlite3 obsoletes
   - fix tab vs space whitespace issues
