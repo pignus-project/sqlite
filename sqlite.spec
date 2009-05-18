@@ -3,21 +3,23 @@
 %bcond_with static
 %bcond_without check
 
+%define docver %(echo %{version}|sed -e "s/\\./_/g")
+
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: 3.6.14
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
-Source: http://www.sqlite.org/sqlite-%{version}.tar.gz
+Source0: http://www.sqlite.org/sqlite-%{version}.tar.gz
+Source1: http://www.sqlite.org/sqlite_docs_%{docver}.zip
 # Fix build with --enable-load-extension, upstream ticket #3137
 Patch1: sqlite-3.6.12-libdl.patch
 # Avoid insecure sprintf(), use a system path for lempar.c, patch from Debian
 Patch2: sqlite-3.6.6.2-lemon-snprintf.patch
-Patch3: sqlite-3.6.12-no-sqlite-doc.patch
 # Fixup io-test fsync expectations wrt SQLITE_DISABLE_DIRSYNC
-Patch4: sqlite-3.6.13-iotest-nodirsync.patch
+Patch3: sqlite-3.6.13-iotest-nodirsync.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
 # libdl patch needs
 BuildRequires: autoconf
@@ -49,6 +51,15 @@ This package contains the header files and development documentation
 for %{name}. If you like to develop programs using %{name}, you will need 
 to install %{name}-devel.
 
+%package doc
+Summary: Documentation for sqlite
+Group: Documentation
+
+%description doc
+This package contains most of the static HTML files that comprise the
+www.sqlite.org website, including all of the SQL Syntax and the 
+C/C++ interface specs and other miscellaneous documentation.
+
 %package -n lemon
 Summary: A parser generator
 Group: Development/Tools
@@ -76,11 +87,10 @@ This package contains the tcl modules for %{name}.
 %endif
 
 %prep
-%setup -q
+%setup -q -a1
 %patch1 -p1 -b .libdl
 %patch2 -p1 -b .lemon-sprintf
-%patch3 -p1 -b .no-sqlite-doc
-%patch4 -p1 -b .nodirsync
+%patch3 -p1 -b .nodirsync
 
 %build
 autoconf
@@ -91,8 +101,11 @@ export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE
            --enable-load-extension \
            %{?with_tcl:TCLLIBDIR=%{tcl_sitearch}/sqlite3}
 
+# rpath removal
+sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+
 make %{?_smp_mflags}
-make doc
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -144,6 +157,10 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_libdir}/*.la
 %endif
 
+%files doc
+%defattr(-, root, root)
+%doc %{name}-%{docver}-docs/*
+
 %files -n lemon
 %defattr(-, root, root)
 %{_bindir}/lemon
@@ -156,6 +173,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon May 18 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.14-2
+- disable rpath
+- add -doc subpackage instead of patching out reference to it
+
 * Thu May 14 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.14-1
 - update to 3.6.14 (http://www.sqlite.org/releaselog/3_6_14.html)
 - merge-review cosmetics (#226429)
