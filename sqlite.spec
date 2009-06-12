@@ -3,12 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define docver %(echo %{version}|sed -e "s/\\./_/g")
+# upstream doesn't provide separate -docs sources for all minor releases
+%define basever 3.6.14
+%define docver %(echo %{basever}|sed -e "s/\\./_/g")
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: 3.6.14
-Release: 2%{?dist}
+Version: %{basever}.2
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -173,6 +175,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Jun 12 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.14.2-1
+- update to 3.6.14.2 (#505229)
+
 * Mon May 18 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.14-2
 - disable rpath
 - add -doc subpackage instead of patching out reference to it
