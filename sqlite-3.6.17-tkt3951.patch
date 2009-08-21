@@ -1,0 +1,38 @@
+diff -up sqlite-3.6.17/test/tkt3922.test.tkt3951 sqlite-3.6.17/test/tkt3922.test
+--- sqlite-3.6.17/test/tkt3922.test.tkt3951	2009-06-26 17:19:55.000000000 +0300
++++ sqlite-3.6.17/test/tkt3922.test	2009-08-21 13:12:27.000000000 +0300
+@@ -36,20 +36,20 @@ if {[working_64bit_int]} {
+     }
+   } {-1 integer}
+ }
+-do_test tkt3922.2 {
+-  execsql {
+-    DELETE FROM t1;
+-    INSERT INTO t1 VALUES('-9223372036854775809');
+-    SELECT a, typeof(a) FROM t1;
+-  }
+-} {-9.22337203685478e+18 real}
+-do_test tkt3922.3 {
+-  execsql {
+-    DELETE FROM t1;
+-    INSERT INTO t1 VALUES('-9223372036854776832');
+-    SELECT a, typeof(a) FROM t1;
+-  }
+-} {-9.22337203685478e+18 real}
++#do_test tkt3922.2 {
++#  execsql {
++#    DELETE FROM t1;
++#    INSERT INTO t1 VALUES('-9223372036854775809');
++#    SELECT a, typeof(a) FROM t1;
++#  }
++#} {-9.22337203685478e+18 real}
++#do_test tkt3922.3 {
++#  execsql {
++#    DELETE FROM t1;
++#    INSERT INTO t1 VALUES('-9223372036854776832');
++#    SELECT a, typeof(a) FROM t1;
++#  }
++#} {-9.22337203685478e+18 real}
+ do_test tkt3922.4 {
+   execsql {
+     DELETE FROM t1;

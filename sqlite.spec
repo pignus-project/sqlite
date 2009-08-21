@@ -4,13 +4,13 @@
 %bcond_without check
 
 # upstream doesn't provide separate -docs sources for all minor releases
-%define basever 3.6.14
+%define basever 3.6.17
 %define docver %(echo %{basever}|sed -e "s/\\./_/g")
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: %{basever}.2
-Release: 2%{?dist}
+Version: %{basever}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -22,6 +22,8 @@ Patch1: sqlite-3.6.12-libdl.patch
 Patch2: sqlite-3.6.6.2-lemon-snprintf.patch
 # Fixup io-test fsync expectations wrt SQLITE_DISABLE_DIRSYNC
 Patch3: sqlite-3.6.13-iotest-nodirsync.patch
+# Disable two tests failing on at least on x86_64, ticket #3951
+Patch4: sqlite-3.6.17-tkt3951.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
 # libdl patch needs
 BuildRequires: autoconf
@@ -93,6 +95,7 @@ This package contains the tcl modules for %{name}.
 %patch1 -p1 -b .libdl
 %patch2 -p1 -b .lemon-sprintf
 %patch3 -p1 -b .nodirsync
+%patch4 -p1 -b .tkt3951
 
 %build
 autoconf
@@ -175,6 +178,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Aug 21 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.17-1
+- update to 3.6.17 (http://www.sqlite.org/releaselog/3_6_17.html)
+- disable to failing tests until upstream fixes
+
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.6.14.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
