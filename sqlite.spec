@@ -4,7 +4,7 @@
 %bcond_without check
 
 # upstream doesn't provide separate -docs sources for all minor releases
-%define basever 3.6.17
+%define basever 3.6.18
 %define docver %(echo %{basever}|sed -e "s/\\./_/g")
 
 Summary: Library that implements an embeddable SQL database engine
@@ -20,10 +20,6 @@ Source1: http://www.sqlite.org/sqlite_docs_%{docver}.zip
 Patch1: sqlite-3.6.12-libdl.patch
 # Avoid insecure sprintf(), use a system path for lempar.c, patch from Debian
 Patch2: sqlite-3.6.6.2-lemon-snprintf.patch
-# Fixup io-test fsync expectations wrt SQLITE_DISABLE_DIRSYNC
-Patch3: sqlite-3.6.13-iotest-nodirsync.patch
-# Disable two tests failing on at least on x86_64, ticket #3951
-Patch4: sqlite-3.6.17-tkt3951.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
 # libdl patch needs
 BuildRequires: autoconf
@@ -94,8 +90,6 @@ This package contains the tcl modules for %{name}.
 %setup -q -a1
 %patch1 -p1 -b .libdl
 %patch2 -p1 -b .lemon-sprintf
-%patch3 -p1 -b .nodirsync
-%patch4 -p1 -b .tkt3951
 
 %build
 autoconf
@@ -178,6 +172,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Oct 06 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.18-1
+- update to 3.6.18 (http://www.sqlite.org/releaselog/3_6_18.html)
+- drop no longer needed test-disabler patches
+
 * Fri Aug 21 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.17-1
 - update to 3.6.17 (http://www.sqlite.org/releaselog/3_6_17.html)
 - disable to failing tests until upstream fixes
