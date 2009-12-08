@@ -4,7 +4,7 @@
 %bcond_without check
 
 # upstream doesn't provide separate -docs sources for all minor releases
-%define basever 3.6.20
+%define basever 3.6.21
 %define docver %(echo %{basever}|sed -e "s/\\./_/g")
 
 Summary: Library that implements an embeddable SQL database engine
@@ -172,6 +172,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Dec 08 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.21-1
+- update to 3.6.21 (http://www.sqlite.org/releaselog/3_6_21.html)
+
 * Tue Nov 17 2009 Panu Matilainen <pmatilai@redhat.com> - 3.6.20-1
 - update to 3.6.20 (http://www.sqlite.org/releaselog/3_6_20.html)
 
