@@ -4,7 +4,7 @@
 %bcond_without check
 
 # upstream doesn't provide separate -docs sources for all minor releases
-%define basever 3.6.22
+%define basever 3.6.23
 %define docver %(echo %{basever}|sed -e "s/\\./_/g")
 
 Summary: Library that implements an embeddable SQL database engine
@@ -18,8 +18,8 @@ Source0: http://www.sqlite.org/sqlite-%{version}.tar.gz
 Source1: http://www.sqlite.org/sqlite_docs_%{docver}.zip
 # Fix build with --enable-load-extension, upstream ticket #3137
 Patch1: sqlite-3.6.12-libdl.patch
-# Avoid insecure sprintf(), use a system path for lempar.c, patch from Debian
-Patch2: sqlite-3.6.6.2-lemon-snprintf.patch
+# Support a system-wide lemon template
+Patch2: sqlite-3.6.23-lemon-system-template.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
 # libdl patch needs
 BuildRequires: autoconf
@@ -89,7 +89,7 @@ This package contains the tcl modules for %{name}.
 %prep
 %setup -q -a1
 %patch1 -p1 -b .libdl
-%patch2 -p1 -b .lemon-sprintf
+%patch2 -p1 -b .lemon-system-template
 
 %build
 autoconf
@@ -126,10 +126,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 
 %if %{with check}
 %check
-# let this fail for now:
-# - five nan-test broken on PPC (upstream ticket #3404)
-# - bunch of rtree-tests failing on PPC atm
-make test ||:
+make test
 %endif
 
 %clean
@@ -172,6 +169,11 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Mar 10 2010 Panu Matilainen <pmatilai@redhat.com> - 3.6.23-1
+- update to 3.6.23 (http://www.sqlite.org/releaselog/3_6_23.html)
+- drop the lemon sprintf patch, upstream doesn't want it
+- make test-suite errors fail build finally
+
 * Mon Jan 18 2010 Panu Matilainen <pmatilai@redhat.com> - 3.6.22-1
 - update to 3.6.22 (http://www.sqlite.org/releaselog/3_6_22.html)
 
