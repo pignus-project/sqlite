@@ -9,7 +9,7 @@
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: %{basever}
+Version: %{basever}.1
 Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
@@ -169,6 +169,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Apr 19 2010 Panu Matilainen <pmatilai@redhat.com> - 3.6.23.1-1
+- update to 3.6.23.1 (http://www.sqlite.org/releaselog/3_6_23_1.html)
+
 * Wed Mar 10 2010 Panu Matilainen <pmatilai@redhat.com> - 3.6.23-1
 - update to 3.6.23 (http://www.sqlite.org/releaselog/3_6_23.html)
 - drop the lemon sprintf patch, upstream doesn't want it
