@@ -4,13 +4,13 @@
 %bcond_without check
 
 # upstream doesn't provide separate -docs sources for all minor releases
-%define basever 3.6.23
+%define basever 3.7.0
 %define docver %(echo %{basever}|sed -e "s/\\./_/g")
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{basever}.1
-Release: 2%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -173,6 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Aug 13 2010 Panu Matilainen <pmatilai@redhat.com> - 3.7.0.1-1
+- update to 3.7.0.1 (http://www.sqlite.org/releaselog/3_7_0_1.html)
+
 * Sat Jul  3 2010 Dan Horák <dan[at]danny.cz> - 3.6.23.1-2
 - some tests are failing on s390 and ppc/ppc64 so don't fail the whole build there
 
