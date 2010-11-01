@@ -4,13 +4,13 @@
 %bcond_without check
 
 # upstream doesn't provide separate -docs sources for all minor releases
-%define basever 3.7.0
+%define basever 3.7.3
 %define docver %(echo %{basever}|sed -e "s/\\./_/g")
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: %{basever}.1
-Release: 2%{?dist}
+Version: %{basever}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -173,6 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Nov 1 2010 Panu Matilainen <pmatilai@redhat.com> - 3.7.3-1
+- update to 3.7.3 (http://www.sqlite.org/releaselog/3_7_3.html)
+
 * Tue Sep  2 2010 Tom "spot" Callaway <tcallawa@redhat.com> - 3.7.0.1-2
 - enable SQLITE_SECURE_DELETE, SQLITE_ENABLE_UNLOCK_NOTIFY for firefox 4
 
