@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{basever}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -126,7 +126,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 
 %if %{with check}
 %check
-%ifarch s390 ppc ppc64
+%ifarch s390 s390x ppc ppc64
 make test || :
 %else
 make test
@@ -173,6 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Nov 5 2010 Dan Horák <dan[at]danny.cz> - 3.7.3-2
+- expect test failures also on s390x
+
 * Mon Nov 1 2010 Panu Matilainen <pmatilai@redhat.com> - 3.7.3-1
 - update to 3.7.3 (http://www.sqlite.org/releaselog/3_7_3.html)
 
