@@ -3,23 +3,24 @@
 %bcond_with static
 %bcond_without check
 
-# upstream doesn't provide separate -docs sources for all minor releases
-%define basever 3.7.3
-%define docver %(echo %{basever}|sed -e "s/\\./_/g")
+%define realver 3070400
+%define rpmver %(echo %{realver}|sed -e "s/00//g" -e "s/0/./g")
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
-Version: %{basever}
-Release: 2%{?dist}
+Version: %{rpmver}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
-Source0: http://www.sqlite.org/sqlite-%{version}.tar.gz
-Source1: http://www.sqlite.org/sqlite_docs_%{docver}.zip
+Source0: http://www.sqlite.org/sqlite-src-%{realver}.zip
+Source1: http://www.sqlite.org/sqlite-doc-%{realver}.zip
 # Fix build with --enable-load-extension, upstream ticket #3137
 Patch1: sqlite-3.6.12-libdl.patch
 # Support a system-wide lemon template
 Patch2: sqlite-3.6.23-lemon-system-template.patch
+# Fixup test-suite expectations wrt SQLITE_DISABLE_DIRSYNC 
+Patch3: sqlite-3.7.4-wal2-nodirsync.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
 # libdl patch needs
 BuildRequires: autoconf
@@ -87,9 +88,10 @@ This package contains the tcl modules for %{name}.
 %endif
 
 %prep
-%setup -q -a1
+%setup -q -a1 -n %{name}-src-%{realver}
 %patch1 -p1 -b .libdl
 %patch2 -p1 -b .lemon-system-template
+%patch3 -p1 -b .wal2-nodirsync
 
 %build
 autoconf
@@ -159,7 +161,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files doc
 %defattr(-, root, root)
-%doc %{name}-%{docver}-docs/*
+%doc %{name}-doc-%{realver}/*
 
 %files -n lemon
 %defattr(-, root, root)
@@ -173,6 +175,11 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Dec 9 2010 Panu Matilainen <pmatilai@redhat.com> - 3.7.4-1
+- update to 3.7.4 (http://www.sqlite.org/releaselog/3_7_4.html)
+- deal with upstream source naming, versioning and format changing
+- fixup wal2-test expections wrt SQLITE_DISABLE_DIRSYNC use
+
 * Fri Nov 5 2010 Dan Horák <dan[at]danny.cz> - 3.7.3-2
 - expect test failures also on s390x
 
