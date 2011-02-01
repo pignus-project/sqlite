@@ -3,7 +3,7 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3070400
+%define realver 3070500
 %define rpmver %(echo %{realver}|sed -e "s/00//g" -e "s/0/./g")
 
 Summary: Library that implements an embeddable SQL database engine
@@ -175,6 +175,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Feb 1 2011 Panu Matilainen <pmatilai@redhat.com> - 3.7.5-1
+- update to 3.7.5 (http://www.sqlite.org/releaselog/3_7_5.html)
+
 * Thu Dec 9 2010 Panu Matilainen <pmatilai@redhat.com> - 3.7.4-1
 - update to 3.7.4 (http://www.sqlite.org/releaselog/3_7_4.html)
 - deal with upstream source naming, versioning and format changing
