@@ -9,7 +9,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -55,6 +55,7 @@ to install %{name}-devel.
 %package doc
 Summary: Documentation for sqlite
 Group: Documentation
+BuildArch: noarch
 
 %description doc
 This package contains most of the static HTML files that comprise the
@@ -92,6 +93,9 @@ This package contains the tcl modules for %{name}.
 %patch1 -p1 -b .libdl
 %patch2 -p1 -b .lemon-system-template
 %patch3 -p1 -b .wal2-nodirsync
+
+# Remove cgi-script erroneously included in sqlite-doc-3070500
+rm -f %{name}-doc-%{realver}/search
 
 %build
 autoconf
@@ -175,6 +179,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Feb 2 2011 Panu Matilainen <pmatilai@redhat.com> - 3.7.5-2
+- unwanted cgi-script in docs creating broken dependencies, remove it
+- make doc sub-package noarch
+
 * Tue Feb 1 2011 Panu Matilainen <pmatilai@redhat.com> - 3.7.5-1
 - update to 3.7.5 (http://www.sqlite.org/releaselog/3_7_5.html)
 
