@@ -9,7 +9,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -132,7 +132,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 
 %if %{with check}
 %check
-%ifarch s390 s390x ppc ppc64
+%ifarch s390 s390x ppc ppc64 %{sparc}
 make test || :
 %else
 make test
@@ -179,6 +179,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Feb 25 2011 Dennis Gilmore <dennis@ausil.us> - 3.7.5-4
+- build tests on sparc expecting failures same as the other big endian arches
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.7.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
