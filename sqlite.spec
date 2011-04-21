@@ -3,18 +3,19 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3070500
+%define realver 3070602
+%define docver 3070600
 %define rpmver %(echo %{realver}|sed -e "s/00//g" -e "s/0/./g")
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 4%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
 Source0: http://www.sqlite.org/sqlite-src-%{realver}.zip
-Source1: http://www.sqlite.org/sqlite-doc-%{realver}.zip
+Source1: http://www.sqlite.org/sqlite-doc-%{docver}.zip
 # Fix build with --enable-load-extension, upstream ticket #3137
 Patch1: sqlite-3.6.12-libdl.patch
 # Support a system-wide lemon template
@@ -165,7 +166,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files doc
 %defattr(-, root, root)
-%doc %{name}-doc-%{realver}/*
+%doc %{name}-doc-%{docver}/*
 
 %files -n lemon
 %defattr(-, root, root)
@@ -179,6 +180,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Apr 21 2011 Panu Matilainen <pmatilai@redhat.com> - 3.7.6.2-1
+- update to 3.7.6.2 (http://www.sqlite.org/releaselog/3_7_6_2.html)
+
 * Fri Feb 25 2011 Dennis Gilmore <dennis@ausil.us> - 3.7.5-4
 - build tests on sparc expecting failures same as the other big endian arches
 
