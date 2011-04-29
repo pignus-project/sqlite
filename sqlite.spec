@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -22,6 +22,8 @@ Patch1: sqlite-3.6.12-libdl.patch
 Patch2: sqlite-3.6.23-lemon-system-template.patch
 # Fixup test-suite expectations wrt SQLITE_DISABLE_DIRSYNC 
 Patch3: sqlite-3.7.4-wal2-nodirsync.patch
+# Shut up stupid tests depending on system settings of allowed open fd's
+Patch4: sqlite-3.7.6-stupid-openfiles-test.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
 # libdl patch needs
 BuildRequires: autoconf
@@ -94,6 +96,7 @@ This package contains the tcl modules for %{name}.
 %patch1 -p1 -b .libdl
 %patch2 -p1 -b .lemon-system-template
 %patch3 -p1 -b .wal2-nodirsync
+%patch4 -p1 -b .stupid-openfiles-test
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
@@ -180,6 +183,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Apr 29 2011 Panu Matilainen <pmatilai@redhat.com> - 3.7.6.2-2
+- comment out stupid tests causing very bogus build failure on koji
+
 * Thu Apr 21 2011 Panu Matilainen <pmatilai@redhat.com> - 3.7.6.2-1
 - update to 3.7.6.2 (http://www.sqlite.org/releaselog/3_7_6_2.html)
 
