@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -136,7 +136,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 
 %if %{with check}
 %check
-%ifarch s390 s390x ppc ppc64 %{sparc}
+%ifarch s390 s390x ppc ppc64 %{sparc} %{arm}
 make test || :
 %else
 make test
@@ -183,6 +183,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat May 21 2011 Peter Robinson <pbrobinson@gmail.com> - 3.7.6.2-3
+- add arm to the exclude from tests list
+
 * Fri Apr 29 2011 Panu Matilainen <pmatilai@redhat.com> - 3.7.6.2-2
 - comment out stupid tests causing very bogus build failure on koji
 
