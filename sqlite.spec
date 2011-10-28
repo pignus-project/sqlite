@@ -3,8 +3,8 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3070701
-%define docver 3070701
+%define realver 3070800
+%define docver 3070800
 %define rpmver %(echo %{realver}|sed -e "s/00//g" -e "s/0/./g")
 
 Summary: Library that implements an embeddable SQL database engine
@@ -174,6 +174,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Oct 28 2011 Panu Matilainen <pmatilai@redhat.com> - 3.7.8-1
+- update to 3.7.8 (http://www.sqlite.org/releaselog/3_7_8.html)
+
 * Wed Jul 13 2011 Panu Matilainen <pmatilai@redhat.com> - 3.7.7.1-1
 - update to 3.7.7.1 (http://www.sqlite.org/releaselog/3_7_7_1.html)
 - autoconf no longer needed for build, libdl check finally upstreamed
