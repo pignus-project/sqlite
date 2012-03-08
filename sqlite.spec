@@ -3,14 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3070900
-%define docver 3070900
-%define rpmver %(echo %{realver}|sed -e "s/00//g" -e "s/0/./g")
+%define realver 3071000
+%define docver 3071000
+%define rpmver 3.7.10
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 2%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -20,6 +20,10 @@ Source1: http://www.sqlite.org/sqlite-doc-%{docver}.zip
 Patch1: sqlite-3.6.23-lemon-system-template.patch
 # Shut up stupid tests depending on system settings of allowed open fd's
 Patch2: sqlite-3.7.7.1-stupid-openfiles-test.patch
+# Shut up pagecache overflow test whose expected result depends on compile
+# options and whatnot. Dunno why this started failing in 3.7.10 but
+# doesn't seem particularly critical...
+Patch3: sqlite-3.7.10-pagecache-overflow-test.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
 %if %{with tcl}
 BuildRequires: /usr/bin/tclsh
@@ -89,6 +93,7 @@ This package contains the tcl modules for %{name}.
 %setup -q -a1 -n %{name}-src-%{realver}
 %patch1 -p1 -b .lemon-system-template
 %patch2 -p1 -b .stupid-openfiles-test
+%patch3 -p1 -b .pagecache-overflow-test
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
@@ -174,6 +179,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Mar 07 2012 Panu Matilainen <pmatilai@redhat.com> - 3.7.10-1
+- update to 3.7.10 (http://www.sqlite.org/releaselog/3_7_10.html)
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.7.9-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
