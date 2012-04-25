@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -24,6 +24,10 @@ Patch2: sqlite-3.7.7.1-stupid-openfiles-test.patch
 # options and whatnot. Dunno why this started failing in 3.7.10 but
 # doesn't seem particularly critical...
 Patch3: sqlite-3.7.10-pagecache-overflow-test.patch
+# sqlite >= 3.7.10 is buggy if malloc_usable_size() is detected, disable it:
+# https://bugzilla.redhat.com/show_bug.cgi?id=801981
+# http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
+Patch4: sqlite-3.7.11-no-malloc-usable-size.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
 %if %{with tcl}
 BuildRequires: /usr/bin/tclsh
@@ -94,6 +98,7 @@ This package contains the tcl modules for %{name}.
 %patch1 -p1 -b .lemon-system-template
 %patch2 -p1 -b .stupid-openfiles-test
 %patch3 -p1 -b .pagecache-overflow-test
+%patch4 -p1 -b .no-malloc-usable-size
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
@@ -132,6 +137,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 
 %if %{with check}
 %check
+export MALLOC_CHECK_=3
 %ifarch s390 s390x ppc ppc64 %{sparc} %{arm}
 make test || :
 %else
@@ -179,6 +185,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Apr 25 2012 Panu Matilainen <pmatilai@redhat.com> - 3.7.11-2
+- run test-suite with MALLOC_CHECK_=3
+- disable buggy malloc_usable_size code (#801981)
+
 * Mon Mar 26 2012 Panu Matilainen <pmatilai@redhat.com> - 3.7.11-1
 - update to 3.7.11 (http://www.sqlite.org/releaselog/3_7_11.html)
 
