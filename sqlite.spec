@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -28,6 +28,9 @@ Patch3: sqlite-3.7.10-pagecache-overflow-test.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=801981
 # http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
 Patch4: sqlite-3.7.11-no-malloc-usable-size.patch
+# cherry-picked upstream fix fox #821642:
+# http://www.sqlite.org/src/info/79a4a3a84f?sbs=0
+Patch5: sqlite-3.7.11-savepoint-release.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
 %if %{with tcl}
 BuildRequires: /usr/bin/tclsh
@@ -99,6 +102,7 @@ This package contains the tcl modules for %{name}.
 %patch2 -p1 -b .stupid-openfiles-test
 %patch3 -p1 -b .pagecache-overflow-test
 %patch4 -p1 -b .no-malloc-usable-size
+%patch5 -p0 -b .savepoint-release
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
@@ -185,6 +189,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Jun 01 2012 Panu Matilainen <pmatilai@redhat.com> - 3.7.11-3
+- don't abort pending queries on release of nested savepoint (#821642)
+
 * Wed Apr 25 2012 Panu Matilainen <pmatilai@redhat.com> - 3.7.11-2
 - run test-suite with MALLOC_CHECK_=3
 - disable buggy malloc_usable_size code (#801981)
