@@ -3,14 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3071100
-%define docver 3071100
-%define rpmver 3.7.11
+%define realver 3071300
+%define docver 3071300
+%define rpmver 3.7.13
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 3%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -28,9 +28,6 @@ Patch3: sqlite-3.7.10-pagecache-overflow-test.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=801981
 # http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
 Patch4: sqlite-3.7.11-no-malloc-usable-size.patch
-# cherry-picked upstream fix fox #821642:
-# http://www.sqlite.org/src/info/79a4a3a84f?sbs=0
-Patch5: sqlite-3.7.11-savepoint-release.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
 %if %{with tcl}
 BuildRequires: /usr/bin/tclsh
@@ -102,7 +99,6 @@ This package contains the tcl modules for %{name}.
 %patch2 -p1 -b .stupid-openfiles-test
 %patch3 -p1 -b .pagecache-overflow-test
 %patch4 -p1 -b .no-malloc-usable-size
-%patch5 -p0 -b .savepoint-release
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
@@ -141,6 +137,8 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 
 %if %{with check}
 %check
+# XXX shell tests are broken due to loading system libsqlite3, work around...
+export LD_LIBRARY_PATH=`pwd`/.libs
 export MALLOC_CHECK_=3
 %ifarch s390 s390x ppc ppc64 %{sparc} %{arm}
 make test || :
@@ -189,6 +187,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Jun 25 2012 Panu Matilainen <pmatilai@redhat.com> - 3.7.13-1
+- update to 3.7.13 (http://www.sqlite.org/releaselog/3_7_13.html)
+- drop no longer needed savepoint relase patch
+
 * Fri Jun 01 2012 Panu Matilainen <pmatilai@redhat.com> - 3.7.11-3
 - don't abort pending queries on release of nested savepoint (#821642)
 
