@@ -3,9 +3,9 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3071400
+%define realver 3071401
 %define docver 3071400
-%define rpmver 3.7.14
+%define rpmver 3.7.14.1
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
@@ -27,7 +27,7 @@ Patch3: sqlite-3.7.10-pagecache-overflow-test.patch
 # sqlite >= 3.7.10 is buggy if malloc_usable_size() is detected, disable it:
 # https://bugzilla.redhat.com/show_bug.cgi?id=801981
 # http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
-Patch4: sqlite-3.7.11-no-malloc-usable-size.patch
+Patch4: sqlite-3.7.14.1-no-malloc-usable-size.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
 %if %{with tcl}
 BuildRequires: /usr/bin/tclsh
@@ -187,6 +187,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Nov 06 2012 Panu Matilainen <pmatilai@redhat.com> - 3.7.14.1-1
+- update to 3.7.14.1 (http://www.sqlite.org/releaselog/3_7_14_1.html)
+
 * Wed Oct 03 2012 Panu Matilainen <pmatilai@redhat.com> - 3.7.14-1
 - update to 3.7.14 (http://www.sqlite.org/releaselog/3_7_14.html)
 
