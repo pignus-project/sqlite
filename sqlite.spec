@@ -189,6 +189,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Thu Dec 13 2012 Panu Matilainen <pmatilai@redhat.com> - 3.7.15-1
 - update to 3.7.15 (http://www.sqlite.org/releaselog/3_7_15.html)
+- fix an old incorrect date in spec changelog
 
 * Tue Nov 06 2012 Panu Matilainen <pmatilai@redhat.com> - 3.7.14.1-1
 - update to 3.7.14.1 (http://www.sqlite.org/releaselog/3_7_14_1.html)
@@ -265,7 +266,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Nov 1 2010 Panu Matilainen <pmatilai@redhat.com> - 3.7.3-1
 - update to 3.7.3 (http://www.sqlite.org/releaselog/3_7_3.html)
 
-* Tue Sep  2 2010 Tom "spot" Callaway <tcallawa@redhat.com> - 3.7.0.1-2
+* Thu Sep  2 2010 Tom "spot" Callaway <tcallawa@redhat.com> - 3.7.0.1-2
 - enable SQLITE_SECURE_DELETE, SQLITE_ENABLE_UNLOCK_NOTIFY for firefox 4
 
 * Fri Aug 13 2010 Panu Matilainen <pmatilai@redhat.com> - 3.7.0.1-1
