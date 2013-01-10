@@ -5,7 +5,7 @@
 
 %define realver 3071502
 %define docver 3071502
-%define rpmver 3.7.15
+%define rpmver 3.7.15.2
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
