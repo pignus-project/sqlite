@@ -3,14 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3071502
-%define docver 3071502
-%define rpmver 3.7.15.2
+%define realver 3071600
+%define docver 3071600
+%define rpmver 3.7.16
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 2%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -187,6 +187,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Mar 20 2013 Panu Matilainen <pmatilai@redhat.com> - 3.7.16-1
+- update to 3.7.16 (http://www.sqlite.org/releaselog/3_7_16.html)
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.7.15.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
