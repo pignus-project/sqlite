@@ -3,9 +3,9 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3071601
-%define docver 3071601
-%define rpmver 3.7.16.1
+%define realver 3071602
+%define docver 3071602
+%define rpmver 3.7.16.2
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
@@ -29,6 +29,7 @@ Patch3: sqlite-3.7.10-pagecache-overflow-test.patch
 # http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
 Patch4: sqlite-3.7.15-no-malloc-usable-size.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
+BuildRequires: autoconf
 %if %{with tcl}
 BuildRequires: /usr/bin/tclsh
 BuildRequires: tcl-devel
@@ -102,6 +103,8 @@ This package contains the tcl modules for %{name}.
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
+
+autoconf # Rerun with new autoconf to add support for aarm64
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -DSQLITE_ENABLE_FTS3=3 -DSQLITE_ENABLE_RTREE=1 -DSQLITE_SECURE_DELETE=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -Wall -fno-strict-aliasing"
@@ -187,6 +190,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Apr 29 2013 Jan Stanek <jstanek@redhat.com> - 3.7.16.2-1
+- update to 3.7.16.2 (http://www.sqlite.org/releaselog/3_7_16_2.html)
+- add support for aarch64 (rerunning autoconf) (#926568)
+
 * Sun Mar 31 2013 Panu Matilainen <pmatilai@redhat.com> - 3.7.16.1-1
 - update to 3.7.16.1 (https://www.sqlite.org/releaselog/3_7_16_1.html)
 
