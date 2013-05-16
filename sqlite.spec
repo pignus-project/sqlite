@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -28,6 +28,8 @@ Patch3: sqlite-3.7.10-pagecache-overflow-test.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=801981
 # http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
 Patch4: sqlite-3.7.15-no-malloc-usable-size.patch
+# Man page completion
+Patch5: sqlite-3.7.16-man-missing-options.patch
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: autoconf
 %if %{with tcl}
@@ -100,6 +102,7 @@ This package contains the tcl modules for %{name}.
 %patch2 -p1 -b .stupid-openfiles-test
 %patch3 -p1 -b .pagecache-overflow-test
 %patch4 -p1 -b .no-malloc-usable-size
+%patch5 -p1 -b .man-missing-options
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
@@ -190,6 +193,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu May 16 2013 Jan Stanek <jstanek@redhat.com> - 3.7.16.2-2
+- Added missing options to man page (#948862)
+
 * Mon Apr 29 2013 Jan Stanek <jstanek@redhat.com> - 3.7.16.2-1
 - update to 3.7.16.2 (http://www.sqlite.org/releaselog/3_7_16_2.html)
 - add support for aarch64 (rerunning autoconf) (#926568)
