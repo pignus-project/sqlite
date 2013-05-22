@@ -3,14 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3071602
-%define docver 3071602
-%define rpmver 3.7.16.2
+%define realver 3071700
+%define docver 3071700
+%define rpmver 3.7.17
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 2%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -193,6 +193,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed May 22 2013 Jan Stanek <jstanek@redhat.com> - 3.7.17-1
+- Update to 3.7.17 (http://www.sqlite.org/releaselog/3_7_17.html)
+
 * Thu May 16 2013 Jan Stanek <jstanek@redhat.com> - 3.7.16.2-2
 - Added missing options to man page (#948862)
 
