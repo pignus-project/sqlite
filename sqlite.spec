@@ -14,8 +14,8 @@ Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
-Source0: http://www.sqlite.org/sqlite-src-%{realver}.zip
-Source1: http://www.sqlite.org/sqlite-doc-%{docver}.zip
+Source0: http://www.sqlite.org/2013/sqlite-src-%{realver}.zip
+Source1: http://www.sqlite.org/2013/sqlite-doc-%{docver}.zip
 # Support a system-wide lemon template
 Patch1: sqlite-3.6.23-lemon-system-template.patch
 # Shut up stupid tests depending on system settings of allowed open fd's
