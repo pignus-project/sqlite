@@ -5,13 +5,12 @@
 
 %define realver 3080002
 %define docver 3080002
-%define rpmver 3.8.0
-%define fullver %{rpmver}.2
+%define rpmver 3.8.0.2
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -43,9 +42,6 @@ BuildRequires: tcl-devel
 %{!?tcl_sitearch: %global tcl_sitearch %{_libdir}/tcl%{tcl_version}}
 %endif
 BuildRoot: %{_tmppath}/%{name}-root
-
-# Provide full package version
-Provides: sqlite = %{fullver}
 
 %description
 SQLite is a C library that implements an SQL database engine. A large
@@ -201,6 +197,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Sep 26 2013 Jan Stanek <jstanek@redhat.com> - 3.8.0.2-4
+- Removed fullversioned provides and start using full version for rpm version
+
 * Mon Sep 23 2013 Jan Stanek <jstanek@redhat.com> - 3.8.0-3
 - Added fullversioned Provides to fix broken dependency
 
