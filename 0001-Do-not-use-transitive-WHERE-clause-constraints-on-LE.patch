@@ -1,0 +1,29 @@
+From c098d918e1e19088be9659c409f1a6fa32b0efe6 Mon Sep 17 00:00:00 2001
+From: "D. Richard Hipp" <drh@hwaci.com>
+Date: Mon, 28 Oct 2013 20:15:56 +0000
+Subject: [PATCH] Do not use transitive WHERE-clause constraints on LEFT JOINs.
+ Fix for ticket [c620261b5b5dc].
+
+---
+ src/where.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/where.c b/src/where.c
+index 266dc92..4868a7a 100644
+--- a/src/where.c
++++ b/src/where.c
+@@ -878,7 +878,10 @@ static WhereTerm *whereScanNext(WhereScan *pScan){
+     iColumn = pScan->aEquiv[pScan->iEquiv-1];
+     while( (pWC = pScan->pWC)!=0 ){
+       for(pTerm=pWC->a+k; k<pWC->nTerm; k++, pTerm++){
+-        if( pTerm->leftCursor==iCur && pTerm->u.leftColumn==iColumn ){
++        if( pTerm->leftCursor==iCur
++         && pTerm->u.leftColumn==iColumn
++         && (pScan->iEquiv<=2 || !ExprHasProperty(pTerm->pExpr, EP_FromJoin))
++        ){
+           if( (pTerm->eOperator & WO_EQUIV)!=0
+            && pScan->nEquiv<ArraySize(pScan->aEquiv)
+           ){
+-- 
+1.8.4.2
+

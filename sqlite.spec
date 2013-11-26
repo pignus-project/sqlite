@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -32,6 +32,8 @@ Patch4: sqlite-3.7.15-no-malloc-usable-size.patch
 Patch5: sqlite-3.7.16-man-missing-options.patch
 # Temporary workaround for failed percentile test, see patch for details
 Patch6: sqlite-3.8.0-percentile-test.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1034714
+Patch7: 0001-Do-not-use-transitive-WHERE-clause-constraints-on-LE.patch
 
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: autoconf
@@ -107,6 +109,7 @@ This package contains the tcl modules for %{name}.
 %patch4 -p1 -b .no-malloc-usable-size
 %patch5 -p1 -b .man-missing-options
 %patch6 -p1 -b .nonprecise-percentile-test
+%patch7 -p1 -b .transitive-where-clause-constraints
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
@@ -197,6 +200,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Nov 26 2013 Debarshi Ray <rishi@fedoraproject.org> - 3.8.1-2
+- Do not use transitive WHERE-clause constraints on LEFT JOINs (#1034714)
+
 * Tue Oct 22 2013 Jan Stanek <jstanek@redhat.com> - 3.8.1-1
 - Update to 3.8.1 (http://www.sqlite.org/releaselog/3_8_1.html)
 
