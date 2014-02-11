@@ -3,14 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3080200
-%define docver 3080200
-%define rpmver 3.8.2
+%define realver 3080300
+%define docver 3080300
+%define rpmver 3.8.3
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 2%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -28,10 +28,8 @@ Patch3: sqlite-3.7.10-pagecache-overflow-test.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=801981
 # http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
 Patch4: sqlite-3.7.15-no-malloc-usable-size.patch
-# Man page completion
-Patch5: sqlite-3.7.16-man-missing-options.patch
 # Temporary workaround for failed percentile test, see patch for details
-Patch6: sqlite-3.8.0-percentile-test.patch
+Patch5: sqlite-3.8.0-percentile-test.patch
 
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: autoconf
@@ -105,8 +103,7 @@ This package contains the tcl modules for %{name}.
 %patch2 -p1 -b .stupid-openfiles-test
 %patch3 -p1 -b .pagecache-overflow-test
 %patch4 -p1 -b .no-malloc-usable-size
-%patch5 -p1 -b .man-missing-options
-%patch6 -p1 -b .nonprecise-percentile-test
+%patch5 -p1 -b .nonprecise-percentile-test
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
@@ -197,6 +194,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Feb 11 2014 Jan Stanek <jstanek@redhat.com> 3.8.3-1
+- Update to 3.8.3 (http://www.sqlite.org/releaselog/3_8_3.html)
+- Dropped man-page patch - included upstream
+
 * Mon Jan  6 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.8.2-2
 - Add aarch64 to all the other arch excludes for tests
 
