@@ -10,10 +10,11 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
+
 Source0: http://www.sqlite.org/2013/sqlite-src-%{realver}.zip
 Source1: http://www.sqlite.org/2013/sqlite-doc-%{docver}.zip
 # Support a system-wide lemon template
@@ -39,7 +40,6 @@ BuildRequires: tcl-devel
 %{!?tcl_version: %global tcl_version 8.5}
 %{!?tcl_sitearch: %global tcl_sitearch %{_libdir}/tcl%{tcl_version}}
 %endif
-BuildRoot: %{_tmppath}/%{name}-root
 
 %description
 SQLite is a C library that implements an SQL database engine. A large
@@ -125,8 +125,6 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 make DESTDIR=${RPM_BUILD_ROOT} install
 
 install -D -m0644 sqlite3.1 $RPM_BUILD_ROOT/%{_mandir}/man1/sqlite3.1
@@ -147,29 +145,24 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 # XXX shell tests are broken due to loading system libsqlite3, work around...
 export LD_LIBRARY_PATH=`pwd`/.libs
 export MALLOC_CHECK_=3
-%ifarch s390 s390x ppc ppc64 %{sparc} %{arm} aarch64
+%ifarch s390 s390x ppc ppc64 %{sparc}
 make test || :
 %else
 make test
 %endif
 %endif
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-, root, root)
 %doc README
 %{_bindir}/sqlite3
 %{_libdir}/*.so.*
 %{_mandir}/man?/*
 
 %files devel
-%defattr(-, root, root)
 %{_includedir}/*.h
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
@@ -179,21 +172,22 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %files doc
-%defattr(-, root, root)
 %doc %{name}-doc-%{docver}/*
 
 %files -n lemon
-%defattr(-, root, root)
 %{_bindir}/lemon
 %{_datadir}/lemon
 
 %if %{with tcl}
 %files tcl
-%defattr(-, root, root)
 %{tcl_sitearch}/sqlite3
 %endif
 
 %changelog
+* Sun Feb 23 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.8.3-2
+- Re-enable check on ARM/aarch64 as failing test fixed upstream for non x86 arches
+- Modernise spec
+
 * Tue Feb 11 2014 Jan Stanek <jstanek@redhat.com> 3.8.3-1
 - Update to 3.8.3 (http://www.sqlite.org/releaselog/3_8_3.html)
 - Dropped man-page patch - included upstream
