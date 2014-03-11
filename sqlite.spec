@@ -3,14 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3080300
-%define docver 3080300
-%define rpmver 3.8.3
+%define realver 3080400
+%define docver 3080400
+%define rpmver 3.8.4
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 2%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -157,7 +157,7 @@ make test
 %postun -p /sbin/ldconfig
 
 %files
-%doc README
+%doc README.md
 %{_bindir}/sqlite3
 %{_libdir}/*.so.*
 %{_mandir}/man?/*
@@ -184,6 +184,9 @@ make test
 %endif
 
 %changelog
+* Tue Mar 11 2014 Jan Stanek <jstanek@redhat.com> 3.8.4-1
+- Update to 3.8.4 (http://www.sqlite.org/releaselog/3_8_4.html)
+
 * Sun Feb 23 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.8.3-2
 - Re-enable check on ARM/aarch64 as failing test fixed upstream for non x86 arches
 - Modernise spec
