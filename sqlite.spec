@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -95,6 +95,15 @@ Requires: tcl(abi) = %{tcl_version}
 
 %description tcl
 This package contains the tcl modules for %{name}.
+
+%package analyzer
+Summary: An analysis program for sqlite3 database files
+Group: Development/Tools
+Requires: %{name} = %{version}-%{release}
+Requires: tcl(abi) = %{tcl_version}
+
+%description analyzer
+This package contains the analysis program for %{name}.
 %endif
 
 %prep
@@ -124,6 +133,12 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 make %{?_smp_mflags}
 
+# Build sqlite3_analyzer
+# depends on tcl
+%if %{with tcl}
+make %{?_smp_mflags} sqlite3_analyzer
+%endif
+
 %install
 make DESTDIR=${RPM_BUILD_ROOT} install
 
@@ -134,6 +149,8 @@ install -D -m0644 tool/lempar.c $RPM_BUILD_ROOT/%{_datadir}/lemon/lempar.c
 %if %{with tcl}
 # fix up permissions to enable dep extraction
 chmod 0755 ${RPM_BUILD_ROOT}/%{tcl_sitearch}/sqlite3/*.so
+# Install sqlite3_analyzer
+install -D -m0755 sqlite3_analyzer $RPM_BUILD_ROOT/%{_bindir}/sqlite3_analyzer
 %endif
 
 %if ! %{with static}
@@ -181,9 +198,15 @@ make test
 %if %{with tcl}
 %files tcl
 %{tcl_sitearch}/sqlite3
+
+%files analyzer
+%{_bindir}/sqlite3_analyzer
 %endif
 
 %changelog
+* Wed Apr 02 2014 Jan Stanek <jstanek@redhat.com> 3.8.4.2-2
+- Added building and shipping of sqlite3_analyzer (#1007159)
+
 * Fri Mar 28 2014 Jan Stanek <jstanek@redhat.com> 3.8.4.2-1
 - Update to 3.8.4 (http://www.sqlite.org/releaselog/3_8_4_2.html)
 
