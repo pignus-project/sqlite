@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -31,6 +31,7 @@ Patch3: sqlite-3.7.10-pagecache-overflow-test.patch
 Patch4: sqlite-3.7.15-no-malloc-usable-size.patch
 # Temporary workaround for failed percentile test, see patch for details
 Patch5: sqlite-3.8.0-percentile-test.patch
+Patch6: sqlite-bug1075889.patch
 
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: autoconf
@@ -113,6 +114,7 @@ This package contains the analysis program for %{name}.
 %patch3 -p1 -b .pagecache-overflow-test
 %patch4 -p1 -b .no-malloc-usable-size
 %patch5 -p1 -b .nonprecise-percentile-test
+%patch6 -p1 -b .bug1075889
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
@@ -204,6 +206,11 @@ make test
 %endif
 
 %changelog
+* Fri Apr 25 2014 Honza Horak <hhorak@redhat.com> - 3.8.4.2-3
+- Revert part of the upstream commit dca1945aeb3fb005, since it causes
+  nautilus to crash
+  Related: #1075889
+
 * Wed Apr 02 2014 Jan Stanek <jstanek@redhat.com> 3.8.4.2-2
 - Added building and shipping of sqlite3_analyzer (#1007159)
 

@@ -1,0 +1,30 @@
+Revert part of the upstream commit dca1945aeb3fb005, since it causes nautilus to crash
+RHBZ: #1075889
+Reported to sqlite-users@sqlite.org on 14/04/25
+
+diff -up sqlite-src-3080402/src/where.c.bug1075889 sqlite-src-3080402/src/where.c
+--- sqlite-src-3080402/src/where.c.bug1075889	2014-04-25 10:16:15.977722490 +0200
++++ sqlite-src-3080402/src/where.c	2014-04-25 10:18:12.600728656 +0200
+@@ -5532,6 +5529,22 @@ WhereInfo *sqlite3WhereBegin(
+     goto whereBeginError;
+   }
+ 
++  /* If the ORDER BY (or GROUP BY) clause contains references to general
++  ** expressions, then we won't be able to satisfy it using indices, so
++  ** go ahead and disable it now.
++  */
++  if( pOrderBy && (wctrlFlags & WHERE_WANT_DISTINCT)!=0 ){
++    for(ii=0; ii<pOrderBy->nExpr; ii++){
++      Expr *pExpr = sqlite3ExprSkipCollate(pOrderBy->a[ii].pExpr);
++      if( pExpr->op!=TK_COLUMN ){
++        pWInfo->pOrderBy = pOrderBy = 0;
++        break;
++      }else if( pExpr->iColumn<0 ){
++        break;
++      }
++    }
++  }
++
+   if( wctrlFlags & WHERE_WANT_DISTINCT ){
+     if( isDistinctRedundant(pParse, pTabList, &pWInfo->sWC, pResultSet) ){
+       /* The DISTINCT marking is pointless.  Ignore it. */
