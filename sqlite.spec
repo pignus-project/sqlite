@@ -3,14 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3080402
-%define docver 3080402
-%define rpmver 3.8.4.2
+%define realver 3080403
+%define docver 3080403
+%define rpmver 3.8.4.3
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 3%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -114,7 +114,7 @@ This package contains the analysis program for %{name}.
 %patch3 -p1 -b .pagecache-overflow-test
 %patch4 -p1 -b .no-malloc-usable-size
 %patch5 -p1 -b .nonprecise-percentile-test
-%patch6 -p1 -b .bug1075889
+%patch6 -b .bug1075889
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
@@ -206,6 +206,11 @@ make test
 %endif
 
 %changelog
+* Tue Apr 29 2014 Jan Stanek <jstanek@redhat.com> - 3.8.4.3-1
+- Update to version 3.8.4.3 (http://www.sqlite.org/releaselog/3_8_4_3.html)
+- Changed patch for rhbz#1075889 to upstream version
+  Related: #1075889
+
 * Fri Apr 25 2014 Honza Horak <hhorak@redhat.com> - 3.8.4.2-3
 - Revert part of the upstream commit dca1945aeb3fb005, since it causes
   nautilus to crash
