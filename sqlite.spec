@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -38,7 +38,7 @@ BuildRequires: autoconf
 %if %{with tcl}
 BuildRequires: /usr/bin/tclsh
 BuildRequires: tcl-devel
-%{!?tcl_version: %global tcl_version 8.5}
+%{!?tcl_version: %global tcl_version 8.6}
 %{!?tcl_sitearch: %global tcl_sitearch %{_libdir}/tcl%{tcl_version}}
 %endif
 
@@ -206,6 +206,9 @@ make test
 %endif
 
 %changelog
+* Wed May 28 2014 Jan Stanek <jstanek@redhat.com> - 3.8.4.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Changes/f21tcl86 with correct tcl_version
+
 * Wed May 21 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 3.8.4.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Changes/f21tcl86
 
