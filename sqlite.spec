@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -164,7 +164,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 # XXX shell tests are broken due to loading system libsqlite3, work around...
 export LD_LIBRARY_PATH=`pwd`/.libs
 export MALLOC_CHECK_=3
-%ifarch s390 s390x ppc ppc64 %{sparc}
+%ifarch s390 s390x ppc ppc64 %{sparc} aarch64
 make test || :
 %else
 make test
@@ -206,6 +206,9 @@ make test
 %endif
 
 %changelog
+* Thu Jun  5 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.8.4.3-4
+- Don't make tests fail the build on aarch64 like some of the other arches
+
 * Wed May 28 2014 Jan Stanek <jstanek@redhat.com> - 3.8.4.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Changes/f21tcl86 with correct tcl_version
 
