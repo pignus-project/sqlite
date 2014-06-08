@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -206,6 +206,9 @@ make test
 %endif
 
 %changelog
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.8.4.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Thu Jun  5 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.8.4.3-4
 - Don't make tests fail the build on aarch64 like some of the other arches
 
