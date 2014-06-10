@@ -3,14 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3080403
-%define docver 3080403
-%define rpmver 3.8.4.3
+%define realver 3080500
+%define docver 3080500
+%define rpmver 3.8.5
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 5%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -31,7 +31,6 @@ Patch3: sqlite-3.7.10-pagecache-overflow-test.patch
 Patch4: sqlite-3.7.15-no-malloc-usable-size.patch
 # Temporary workaround for failed percentile test, see patch for details
 Patch5: sqlite-3.8.0-percentile-test.patch
-Patch6: sqlite-bug1075889.patch
 
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: autoconf
@@ -114,7 +113,6 @@ This package contains the analysis program for %{name}.
 %patch3 -p1 -b .pagecache-overflow-test
 %patch4 -p1 -b .no-malloc-usable-size
 %patch5 -p1 -b .nonprecise-percentile-test
-%patch6 -b .bug1075889
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
@@ -206,6 +204,10 @@ make test
 %endif
 
 %changelog
+* Tue Jun 10 2014 Jan Stanek <jstanek@redhat.com> - 3.8.5-1
+- Update to version 3.8.5 (http://www.sqlite.org/releaselog/3_8_5.html)
+- Dropped patch already included upstream
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.8.4.3-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
