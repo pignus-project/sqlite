@@ -3,14 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3080600
-%define docver 3080600
-%define rpmver 3.8.6
+%define realver 3080700
+%define docver 3080700
+%define rpmver 3.8.7
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 2%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -21,16 +21,12 @@ Source1: http://www.sqlite.org/2013/sqlite-doc-%{docver}.zip
 Patch1: sqlite-3.6.23-lemon-system-template.patch
 # Shut up stupid tests depending on system settings of allowed open fd's
 Patch2: sqlite-3.7.7.1-stupid-openfiles-test.patch
-# Shut up pagecache overflow test whose expected result depends on compile
-# options and whatnot. Dunno why this started failing in 3.7.10 but
-# doesn't seem particularly critical...
-Patch3: sqlite-3.7.10-pagecache-overflow-test.patch
 # sqlite >= 3.7.10 is buggy if malloc_usable_size() is detected, disable it:
 # https://bugzilla.redhat.com/show_bug.cgi?id=801981
 # http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
-Patch4: sqlite-3.7.15-no-malloc-usable-size.patch
+Patch3: sqlite-3.7.15-no-malloc-usable-size.patch
 # Temporary workaround for failed percentile test, see patch for details
-Patch5: sqlite-3.8.0-percentile-test.patch
+Patch4: sqlite-3.8.0-percentile-test.patch
 
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: autoconf
@@ -115,9 +111,8 @@ This package contains the analysis program for %{name}.
 %setup -q -a1 -n %{name}-src-%{realver}
 %patch1 -p1 -b .lemon-system-template
 %patch2 -p1 -b .stupid-openfiles-test
-%patch3 -p1 -b .pagecache-overflow-test
-%patch4 -p1 -b .no-malloc-usable-size
-%patch5 -p1 -b .nonprecise-percentile-test
+%patch3 -p1 -b .no-malloc-usable-size
+%patch4 -p1 -b .nonprecise-percentile-test
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
@@ -209,6 +204,10 @@ make test
 %endif
 
 %changelog
+* Tue Oct 21 2014 Jan Stanek <jstanek@redhat.com> - 3.8.7-1
+- Updated to version 3.8.7 (http://sqlite.org/releaselog/3_8_7.html)
+- Dropped patch for problem fixed upstream
+
 * Tue Aug 19 2014 Jan Stanek <jstanek@redhat.com> - 3.8.6-2
 - Added auto-selection of Tcl version based on Fedora version
 
