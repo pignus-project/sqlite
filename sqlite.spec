@@ -3,9 +3,9 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3080700
-%define docver 3080700
-%define rpmver 3.8.7
+%define realver 3080702
+%define docver 3080702
+%define rpmver 3.8.7.2
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
@@ -204,6 +204,9 @@ make test
 %endif
 
 %changelog
+* Tue Nov 25 2014 Jan Stanek <jstanek@redhat.com> - 3.8.7.2-1
+- Updated to version 3.8.7.2 (http://sqlite.org/releaselog/3_8_7_2.html)
+
 * Tue Oct 21 2014 Jan Stanek <jstanek@redhat.com> - 3.8.7-1
 - Updated to version 3.8.7 (http://sqlite.org/releaselog/3_8_7.html)
 - Dropped patch for problem fixed upstream
