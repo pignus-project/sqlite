@@ -3,14 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3080800
-%define docver 3080800
-%define rpmver 3.8.8
+%define realver 3080803
+%define docver 3080803
+%define rpmver 3.8.8.3
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 3%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -204,6 +204,9 @@ make test
 %endif
 
 %changelog
+* Thu Feb 26 2015 Jan Stanek <jstanek@redhat.com> - 3.8.8.3-1
+- Updated to version 3.8.8.3 (https://sqlite.org/releaselog/3_8_8_3.html)
+
 * Sat Feb 21 2015 Till Maas <opensource@till.name> - 3.8.8-3
 - Rebuilt for Fedora 23 Change
   https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
