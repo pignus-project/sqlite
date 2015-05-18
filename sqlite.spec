@@ -3,9 +3,9 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3080900
-%define docver 3080900
-%define rpmver 3.8.9
+%define realver 3081001
+%define docver 3081001
+%define rpmver 3.8.10.1
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
@@ -27,6 +27,10 @@ Patch2: sqlite-3.7.7.1-stupid-openfiles-test.patch
 Patch3: sqlite-3.7.15-no-malloc-usable-size.patch
 # Temporary workaround for failed percentile test, see patch for details
 Patch4: sqlite-3.8.0-percentile-test.patch
+# Fix define of new compile option
+Patch5: sqlite-3.8.10.1-dbstat-vtab-define-fix.patch
+# Disable test failing due to tcl regression. Details in patch file.
+Patch6: sqlite-3.8.10.1-tcl-regress-tests.patch
 
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: autoconf
@@ -113,6 +117,8 @@ This package contains the analysis program for %{name}.
 %patch2 -p1 -b .stupid-openfiles-test
 %patch3 -p1 -b .no-malloc-usable-size
 %patch4 -p1 -b .nonprecise-percentile-test
+%patch5 -p1 -b .dbstat-vtab-define
+%patch6 -p1 -b .tcl-regress
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
 rm -f %{name}-doc-%{realver}/search
@@ -120,7 +126,7 @@ rm -f %{name}-doc-%{realver}/search
 autoconf # Rerun with new autoconf to add support for aarm64
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -DSQLITE_ENABLE_FTS3=3 -DSQLITE_ENABLE_RTREE=1 -DSQLITE_SECURE_DELETE=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -Wall -fno-strict-aliasing"
+export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -DSQLITE_ENABLE_FTS3=3 -DSQLITE_ENABLE_RTREE=1 -DSQLITE_SECURE_DELETE=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_ENABLE_DBSTAT_VTAB=1 -Wall -fno-strict-aliasing"
 %configure %{!?with_tcl:--disable-tcl} \
            --enable-threadsafe \
            --enable-threads-override-locks \
@@ -204,6 +210,9 @@ make test
 %endif
 
 %changelog
+* Mon May 18 2015 Jan Stanek <jstanek@redhat.com> - 3.8.10.1-1
+- Updated to version 3.8.10.1 (https://www.sqlite.org/releaselog/3_8_10_1.html)
+
 * Tue Apr 14 2015 Jan Stanek <jstanek@redhat.com> - 3.8.9-1
 - Updated to version 3.8.9 (https://www.sqlite.org/releaselog/3_8_9.html)
 
