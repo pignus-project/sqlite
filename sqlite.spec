@@ -3,14 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3081002
-%define docver 3081002
-%define rpmver 3.8.10.2
+%define realver 3081100
+%define docver 3081100
+%define rpmver 3.8.11
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 3%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -27,8 +27,6 @@ Patch2: sqlite-3.7.7.1-stupid-openfiles-test.patch
 Patch3: sqlite-3.7.15-no-malloc-usable-size.patch
 # Temporary workaround for failed percentile test, see patch for details
 Patch4: sqlite-3.8.0-percentile-test.patch
-# Fix define of new compile option
-Patch5: sqlite-3.8.10.1-dbstat-vtab-define-fix.patch
 # Disable test failing due to tcl regression. Details in patch file.
 Patch6: sqlite-3.8.10.1-tcl-regress-tests.patch
 
@@ -117,7 +115,6 @@ This package contains the analysis program for %{name}.
 %patch2 -p1 -b .stupid-openfiles-test
 %patch3 -p1 -b .no-malloc-usable-size
 %patch4 -p1 -b .nonprecise-percentile-test
-%patch5 -p1 -b .dbstat-vtab-define
 %patch6 -p1 -b .tcl-regress
 
 # Remove cgi-script erroneously included in sqlite-doc-3070500
@@ -210,6 +207,9 @@ make test
 %endif
 
 %changelog
+* Tue Jul 28 2015 Jan Stanek <jstanek@redhat.com> - 3.8.11-1
+- Updated to version 3.8.11 (https://sqlite.org/releaselog/3_8_11.html)
+
 * Fri Jun 19 2015 Jan Stanek <jstanek@redhat.com> - 3.8.10.2-3
 - Enabled SQLITE_ENABLE_FTS3_PARENTHESIS extension (rhbz#1232301)
 
