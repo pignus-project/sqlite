@@ -10,13 +10,14 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
 
 Source0: http://www.sqlite.org/2015/sqlite-src-%{realver}.zip
 Source1: http://www.sqlite.org/2015/sqlite-doc-%{docver}.zip
+Source2: http://www.sqlite.org/2015/sqlite-autoconf-%{realver}.tar.gz
 # Support a system-wide lemon template
 Patch1: sqlite-3.6.23-lemon-system-template.patch
 # Shut up stupid tests depending on system settings of allowed open fd's
@@ -207,6 +208,9 @@ make test
 %endif
 
 %changelog
+* Thu Dec 10 2015 Jan Stanek <jstanek@redhat.com> - 3.9.0-2
+- Add autoconf amalgamation for stage2 builds.
+
 * Thu Oct 15 2015 Jan Stanek <jstanek@redhat.com> - 3.9.0-1
 - Updated to version 3.9.0 (https://sqlite.org/releaselog/3_9_0.html)
 
