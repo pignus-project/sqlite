@@ -3,9 +3,9 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3090200
-%define docver 3090200
-%define rpmver 3.9.2
+%define realver 3100000
+%define docver 3100000
+%define rpmver 3.10.0
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
@@ -36,12 +36,7 @@ BuildRequires: autoconf
 %if %{with tcl}
 BuildRequires: /usr/bin/tclsh
 BuildRequires: tcl-devel
-%{!?fedora:%{!?tcl_version: %global tcl_version 8.6}}
-%if %{fedora} <= 20
-%{!?tcl_version: %global tcl_version 8.5}
-%else
 %{!?tcl_version: %global tcl_version 8.6}
-%endif
 %{!?tcl_sitearch: %global tcl_sitearch %{_libdir}/tcl%{tcl_version}}
 %endif
 
@@ -208,6 +203,9 @@ make test
 %endif
 
 %changelog
+* Wed Jan 13 2016 Jan Stanek <jstanek@redhat.com> - 3.10.0-1
+- Updated to version 3.10.0 (http://sqlite.org/releaselog/3_10_0.html)
+
 * Mon Dec 21 2015 Jan Stanek <jstanek@redhat.com> - 3.9.2-1
 - Updated to version 3.9.2 (http://sqlite.org/releaselog/3_9_2.html)
 
