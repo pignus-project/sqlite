@@ -3,9 +3,9 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3100000
-%define docver 3100000
-%define rpmver 3.10.0
+%define realver 3100200
+%define docver 3100200
+%define rpmver 3.10.2
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
@@ -119,7 +119,12 @@ rm -f %{name}-doc-%{realver}/search
 autoconf # Rerun with new autoconf to add support for aarm64
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -DSQLITE_ENABLE_FTS3=3 -DSQLITE_ENABLE_RTREE=1 -DSQLITE_SECURE_DELETE=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_FTS3_PARENTHESIS=1 -Wall -fno-strict-aliasing"
+export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 \
+               -DSQLITE_DISABLE_DIRSYNC=1 -DSQLITE_ENABLE_FTS3=3 \
+               -DSQLITE_ENABLE_RTREE=1 -DSQLITE_SECURE_DELETE=1 \
+               -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_ENABLE_DBSTAT_VTAB=1 \
+               -DSQLITE_ENABLE_FTS3_PARENTHESIS=1 -DSQLITE_ENABLE__JSON1=1 \
+               -Wall -fno-strict-aliasing"
 %configure %{!?with_tcl:--disable-tcl} \
            --enable-threadsafe \
            --enable-threads-override-locks \
@@ -161,7 +166,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 # XXX shell tests are broken due to loading system libsqlite3, work around...
 export LD_LIBRARY_PATH=`pwd`/.libs
 export MALLOC_CHECK_=3
-%ifarch s390 s390x ppc ppc64 %{sparc}
+%ifarch s390 s390x ppc ppc64 %{sparc} %{mips}
 make test || :
 %else
 make test
@@ -203,6 +208,11 @@ make test
 %endif
 
 %changelog
+* Fri Jan 22 2016 Jan Stanek <jstanek@redhat.com> - 3.10.2-1
+- Updated to version 3.10.2 (http://sqlite.org/releaselog/3_10_2.html)
+- Enabled JSON1 Extension (rhbz#1277387)
+- Made test failure nonfatal on MIPS (rhbz#1294888)
+
 * Wed Jan 13 2016 Jan Stanek <jstanek@redhat.com> - 3.10.0-1
 - Updated to version 3.10.0 (http://sqlite.org/releaselog/3_10_0.html)
 
