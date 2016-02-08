@@ -10,14 +10,14 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
 
-Source0: http://www.sqlite.org/2015/sqlite-src-%{realver}.zip
-Source1: http://www.sqlite.org/2015/sqlite-doc-%{docver}.zip
-Source2: http://www.sqlite.org/2015/sqlite-autoconf-%{realver}.tar.gz
+Source0: http://www.sqlite.org/2016/sqlite-src-%{realver}.zip
+Source1: http://www.sqlite.org/2016/sqlite-doc-%{docver}.zip
+Source2: http://www.sqlite.org/2016/sqlite-autoconf-%{realver}.tar.gz
 # Support a system-wide lemon template
 Patch1: sqlite-3.6.23-lemon-system-template.patch
 # Shut up stupid tests depending on system settings of allowed open fd's
@@ -40,6 +40,8 @@ BuildRequires: tcl-devel
 %{!?tcl_sitearch: %global tcl_sitearch %{_libdir}/tcl%{tcl_version}}
 %endif
 
+Requires: %{name}-libs = %{version}-%{release}
+
 %description
 SQLite is a C library that implements an SQL database engine. A large
 subset of SQL92 is supported. A complete database is stored in a
@@ -59,6 +61,13 @@ Requires: pkgconfig
 This package contains the header files and development documentation 
 for %{name}. If you like to develop programs using %{name}, you will need 
 to install %{name}-devel.
+
+%package libs
+Summary: Shared library for the sqlite3 embeddable SQL database engine.
+Group: Development/Libraries
+
+%description libs
+This package contains the shared library for %{name}.
 
 %package doc
 Summary: Documentation for sqlite
@@ -173,15 +182,17 @@ make test
 %endif
 %endif
 
-%post -p /sbin/ldconfig
+%post libs -p /sbin/ldconfig
 
-%postun -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %files
-%doc README.md
 %{_bindir}/sqlite3
-%{_libdir}/*.so.*
 %{_mandir}/man?/*
+
+%files libs
+%doc README.md
+%{_libdir}/*.so.*
 
 %files devel
 %{_includedir}/*.h
@@ -208,6 +219,9 @@ make test
 %endif
 
 %changelog
+* Wed Jan 27 2016 Jan Stanek <jstanek@redhat.com> - 3.10.2-2
+- Split the shared libraries to standalone subpackage
+
 * Fri Jan 22 2016 Jan Stanek <jstanek@redhat.com> - 3.10.2-1
 - Updated to version 3.10.2 (http://sqlite.org/releaselog/3_10_2.html)
 - Enabled JSON1 Extension (rhbz#1277387)
