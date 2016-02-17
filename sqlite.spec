@@ -3,14 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3100200
-%define docver 3100200
-%define rpmver 3.10.2
+%define realver 3110000
+%define docver 3110000
+%define rpmver 3.11.0
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 3%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -219,6 +219,9 @@ make test
 %endif
 
 %changelog
+* Wed Feb 17 2016 Jan Stanek <jstanek@redhat.com> - 3.11.0-1
+- Updated to version 3.11.0 (https://sqlite.org/releaselog/3_11_0.html)
+
 * Mon Feb 08 2016 Jan Stanek <jstanek@redhat.com> - 3.10.2-3
 - Split the shared libraries to standalone subpackage
 
