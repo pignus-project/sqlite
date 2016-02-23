@@ -42,6 +42,10 @@ BuildRequires: tcl-devel
 
 Requires: %{name}-libs = %{version}-%{release}
 
+# Ensure updates from pre-split work on multi-lib systems
+Obsoletes: %{name} < 3.11.0-1
+Conflicts: %{name} < 3.11.0-1
+
 %description
 SQLite is a C library that implements an SQL database engine. A large
 subset of SQL92 is supported. A complete database is stored in a
@@ -65,6 +69,10 @@ to install %{name}-devel.
 %package libs
 Summary: Shared library for the sqlite3 embeddable SQL database engine.
 Group: Development/Libraries
+
+# Ensure updates from pre-split work on multi-lib systems
+Obsoletes: %{name} < 3.11.0-1
+Conflicts: %{name} < 3.11.0-1
 
 %description libs
 This package contains the shared library for %{name}.
@@ -219,6 +227,9 @@ make test
 %endif
 
 %changelog
+* Tue Feb 23 2016 Nils Philippsen <nils@redhat.com>
+- add obsoletes/conflicts to make updates on multi-lib systems work (#1310441)
+
 * Wed Feb 17 2016 Jan Stanek <jstanek@redhat.com> - 3.11.0-1
 - Updated to version 3.11.0 (https://sqlite.org/releaselog/3_11_0.html)
 
