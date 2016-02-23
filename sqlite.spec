@@ -58,7 +58,7 @@ are named to permit each to be installed on a single host
 %package devel
 Summary: Development tools for the sqlite3 embeddable SQL database engine
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
@@ -229,6 +229,7 @@ make test
 %changelog
 * Tue Feb 23 2016 Nils Philippsen <nils@redhat.com>
 - add obsoletes/conflicts to make updates on multi-lib systems work (#1310441)
+- make -devel package depend on arch-specific -libs (not main) package
 
 * Wed Feb 17 2016 Jan Stanek <jstanek@redhat.com> - 3.11.0-1
 - Updated to version 3.11.0 (https://sqlite.org/releaselog/3_11_0.html)
