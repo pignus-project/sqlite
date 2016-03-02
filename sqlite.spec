@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -227,6 +227,9 @@ make test
 %endif
 
 %changelog
+* Wed Mar 02 2016 Jan Stanek <jstanek@redhat.com> - 3.11.0-3
+- Release bump for #1312506
+
 * Tue Feb 23 2016 Nils Philippsen <nils@redhat.com> - 3.11.0-2
 - add obsoletes/conflicts to make updates on multi-lib systems work (#1310441)
 - make -devel package depend on arch-specific -libs (not main) package
