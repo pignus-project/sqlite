@@ -3,14 +3,14 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3110000
-%define docver 3110000
-%define rpmver 3.11.0
+%define realver 3120200
+%define docver 3120200
+%define rpmver 3.12.2
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 3%{?dist}
+Release: 1%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -25,7 +25,7 @@ Patch2: sqlite-3.7.7.1-stupid-openfiles-test.patch
 # sqlite >= 3.7.10 is buggy if malloc_usable_size() is detected, disable it:
 # https://bugzilla.redhat.com/show_bug.cgi?id=801981
 # http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
-Patch3: sqlite-3.7.15-no-malloc-usable-size.patch
+Patch3: sqlite-3.12.2-no-malloc-usable-size.patch
 # Temporary workaround for failed percentile test, see patch for details
 Patch4: sqlite-3.8.0-percentile-test.patch
 # Disable test failing due to tcl regression. Details in patch file.
@@ -227,6 +227,9 @@ make test
 %endif
 
 %changelog
+* Mon Apr 25 2016 Jakub Dorňák <jdornak@redhat.com> - 3.12.2-1
+- Updated to version 3.12.2 (https://sqlite.org/releaselog/3_12_2.html)
+
 * Wed Mar 02 2016 Jan Stanek <jstanek@redhat.com> - 3.11.0-3
 - Release bump for #1312506
 
