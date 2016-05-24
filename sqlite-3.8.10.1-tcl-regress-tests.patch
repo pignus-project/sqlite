@@ -3,10 +3,10 @@ According to sqlite upstream[1], this should be fixed in tcl 8.6.5.
 
 [1] http://mailinglists.sqlite.org/cgi-bin/mailman/private/sqlite-users/2015-May/059518.html
 
-diff -up sqlite-src-3081001/test/shell1.test.old sqlite-src-3081001/test/shell1.test
---- sqlite-src-3081001/test/shell1.test.old	2015-05-18 10:33:00.360463061 +0200
-+++ sqlite-src-3081001/test/shell1.test	2015-05-18 10:33:13.353532231 +0200
-@@ -863,59 +863,59 @@ do_test shell1-4.6 {
+diff -up sqlite-src-3130000/test/shell1.test.orig sqlite-src-3130000/test/shell1.test
+--- sqlite-src-3130000/test/shell1.test.orig	2016-05-24 17:46:53.447074482 +0200
++++ sqlite-src-3130000/test/shell1.test	2016-05-24 17:48:20.951080978 +0200
+@@ -855,65 +855,65 @@ do_test shell1-4.6 {
  
  # Test using arbitrary byte data with the shell via standard input/output.
  #
@@ -60,7 +60,12 @@ diff -up sqlite-src-3081001/test/shell1.test.old sqlite-src-3081001/test/shell1.
 -      error "failed with error: $res"
 -    }
 -    if {$res ne "$oldChar\n"} {
--      error "failed with byte $hex mismatch"
+-      if {[llength $res] > 0} {
+-        set got [format %02X [scan $res %c]]
+-      } else {
+-        set got <empty>
+-      }
+-      error "failed with byte $hex mismatch, got $got"
 -    }
 -  }
 -} {}
@@ -114,9 +119,15 @@ diff -up sqlite-src-3081001/test/shell1.test.old sqlite-src-3081001/test/shell1.
 +#      error "failed with error: $res"
 +#    }
 +#    if {$res ne "$oldChar\n"} {
-+#      error "failed with byte $hex mismatch"
++#      if {[llength $res] > 0} {
++#        set got [format %02X [scan $res %c]]
++#      } else {
++#        set got <empty>
++#      }
++#      error "failed with byte $hex mismatch, got $got"
 +#    }
 +#  }
 +#} {}
  
- finish_test
+ # These test cases do not work on MinGW
+ if 0 {
