@@ -4,9 +4,9 @@ According to sqlite upstream[1], this should be fixed in tcl 8.6.5.
 [1] http://mailinglists.sqlite.org/cgi-bin/mailman/private/sqlite-users/2015-May/059518.html
 
 diff -up sqlite-src-3130000/test/shell1.test.orig sqlite-src-3130000/test/shell1.test
---- sqlite-src-3130000/test/shell1.test.orig	2016-05-24 17:46:53.447074482 +0200
-+++ sqlite-src-3130000/test/shell1.test	2016-05-24 17:48:20.951080978 +0200
-@@ -855,65 +855,65 @@ do_test shell1-4.6 {
+--- sqlite-src-3140100/test/shell1.test.orig	2016-08-12 02:17:02.000000000 +0200
++++ sqlite-src-3140100/test/shell1.test	2016-08-15 15:00:59.869664051 +0200
+@@ -855,67 +855,67 @@ do_test shell1-4.6 {
  
  # Test using arbitrary byte data with the shell via standard input/output.
  #
@@ -25,6 +25,8 @@ diff -up sqlite-src-3130000/test/shell1.test.orig sqlite-src-3130000/test/shell1
 -    if {$i==0x0D || ($tcl_platform(platform)=="windows" && $i==0x1A)} {
 -      continue
 -    }
+-    if {$i>=0xE0 && $tcl_platform(os)=="OpenBSD"}  continue
+-    if {$i>=0xE0 && $i<=0xEF && $tcl_platform(os)=="Linux"}  continue
 -    set hex [format %02X $i]
 -    set char [subst \\x$hex]; set oldChar $char
 -    set escapes [list]
@@ -84,6 +86,8 @@ diff -up sqlite-src-3130000/test/shell1.test.orig sqlite-src-3130000/test/shell1
 +#    if {$i==0x0D || ($tcl_platform(platform)=="windows" && $i==0x1A)} {
 +#      continue
 +#    }
++#    if {$i>=0xE0 && $tcl_platform(os)=="OpenBSD"}  continue
++#    if {$i>=0xE0 && $i<=0xEF && $tcl_platform(os)=="Linux"}  continue
 +#    set hex [format %02X $i]
 +#    set char [subst \\x$hex]; set oldChar $char
 +#    set escapes [list]

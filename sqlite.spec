@@ -3,9 +3,9 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3130000
-%define docver 3130000
-%define rpmver 3.13.0
+%define realver 3140100
+%define docver 3140100
+%define rpmver 3.14.1
 
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
@@ -130,9 +130,6 @@ This package contains the analysis program for %{name}.
 %patch4 -p1 -b .nonprecise-percentile-test
 %patch6 -p1 -b .tcl-regress
 
-# Remove cgi-script erroneously included in sqlite-doc-3070500
-rm -f %{name}-doc-%{realver}/search
-
 autoconf # Rerun with new autoconf to add support for aarm64
 
 %build
@@ -227,6 +224,9 @@ make test
 %endif
 
 %changelog
+* Mon Aug 15 2016 Jakub Dorňák <jdornak@redhat.com> - 3.14.1-1
+- Updated to version 3.14.1 (https://sqlite.org/releaselog/3_14_1.html)
+
 * Tue May 24 2016 Jakub Dorňák <jdornak@redhat.com> - 3.13.0-1
 - Updated to version 3.13.0 (https://sqlite.org/releaselog/3_13_0.html)
 
