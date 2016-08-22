@@ -180,15 +180,23 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 # XXX shell tests are broken due to loading system libsqlite3, work around...
 export LD_LIBRARY_PATH=`pwd`/.libs
 export MALLOC_CHECK_=3
-%ifarch armv7hl
+
+# csv01 hangs on all non-intel archs i've tried
+%ifarch x86_64 %{ix86}
+%else
 rm test/csv01.test
 %endif
-%ifarch s390 s390x ppc ppc64 %{sparc} %{mips}
-make test || :
-%else
+
+%ifarch s390x ppc64
+rm test/fts3conf.test
+%endif
+
+%ifarch armv7hl
+rm test/trace3.test
+%endif
+
 make test
-%endif
-%endif
+%endif # with check
 
 %post libs -p /sbin/ldconfig
 
