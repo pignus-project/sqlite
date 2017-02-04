@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 1%{?dist}
+Release: 1%{?dist}.lr1
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -191,7 +191,7 @@ rm test/csv01.test
 rm test/fts3conf.test
 %endif
 
-%ifarch armv7hl
+%ifarch %{arm}
 rm test/trace3.test
 %endif
 
@@ -235,6 +235,9 @@ make test
 %endif
 
 %changelog
+* Sat Feb 04 2017 Lubomir Rintel <lkundrak@v3.sk> - 3.14.2-1.pi1
+- Disable trace3 test on all arm
+
 * Wed Sep 21 2016 Jakub Dorňák <jdornak@redhat.com> - 3.14.2-1
 - Updated to version 3.14.2 (https://sqlite.org/releaselog/3_14_2.html)
 
